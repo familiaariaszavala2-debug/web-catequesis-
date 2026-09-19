@@ -6,6 +6,40 @@
     <title>Catequesis - Control, Misas y Comunidad</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDKs y Configuración -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Tus credenciales reales de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOzM0d5tCvpiEfdV8Y0Ux-7exhLsDjMCs",
+            authDomain: "web-catequesis.firebaseapp.com",
+            projectId: "web-catequesis",
+            storageBucket: "web-catequesis.firebasestorage.app",
+            messagingSenderId: "766100787400",
+            appId: "1:766100787400:web:390f2c7a7dd488a2ac55fd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.firebaseModules = { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, query, orderBy, onSnapshot };
+        
+        // Cargar datos al iniciar
+        window.inicializarDatosCloud = function() {
+            setTimeout(() => {
+                if(!window.db) return;
+                window.cargarMonaguillosCloud();
+                window.cargarRegistroCloud();
+                window.cargarTareasCloud();
+                window.cargarMisasCloud();
+                window.cargarChatCloud();
+            }, 800);
+        };
+        window.inicializarDatosCloud();
+    </script>
 </head>
 <body class="bg-slate-50 min-h-screen font-sans flex flex-col justify-between">
 
@@ -15,7 +49,7 @@
             <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold">⛪ Catequesis & Comunidad</h1>
-                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia y Roles</p>
+                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia y Roles en la Nube</p>
                 </div>
                 <div class="mt-3 sm:mt-0 flex items-center space-x-3">
                     <span id="estado-admin" class="bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600">Modo Público (Lectura)</span>
@@ -42,11 +76,11 @@
             <section id="tab-asistencia" class="space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Control de Asistencia</h2>
-                    <p class="text-sm text-gray-500 mb-6">Registro para Catequistas y Monaguillos (Las administradoras pueden guardar cambios y agregar monaguillos).</p>
+                    <p class="text-sm text-gray-500 mb-6">Registro para Catequistas y Monaguillos sincronizado en la nube.</p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
                         <input type="date" id="fecha-asistencia" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none w-full sm:w-auto">
-                        <button onclick="guardarAsistencia()" id="btn-guardar-asistencia" class="bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto" disabled>🔒 Guardar Asistencia (Requiere Admin)</button>
+                        <button onclick="guardarAsistenciaCloud()" id="btn-guardar-asistencia" class="bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto" disabled>🔒 Guardar Asistencia (Requiere Admin)</button>
                     </div>
 
                     <!-- Tabla Catequistas -->
@@ -102,7 +136,7 @@
                             <h3 class="font-bold text-indigo-700 text-base">👦👧 Monaguillos</h3>
                             <div id="panel-add-monaguillo" class="hidden flex gap-2">
                                 <input type="text" id="nombre-nuevo-monaguillo" placeholder="Nombre del monaguillo..." class="border rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <button onclick="agregarMonaguillo()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-1 rounded transition">+ Añadir</button>
+                                <button onclick="agregarMonaguilloCloud()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-1 rounded transition">+ Añadir</button>
                             </div>
                         </div>
                         <div class="overflow-x-auto border rounded-xl">
@@ -115,19 +149,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tabla-monaguillos-body" class="divide-y">
-                                    <tr>
-                                        <td class="p-3 font-medium text-gray-800">Juan (Ejemplo)</td>
-                                        <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Justificado">Justificado</option>
-                                            </select>
-                                        </td>
-                                        <td class="p-3 text-center col-accion-admin hidden">
-                                            <button onclick="this.closest('tr').remove()" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded hover:bg-red-100">🗑️ Eliminar</button>
-                                        </td>
-                                    </tr>
+                                    <!-- Se cargan dinámicamente de Firebase -->
                                 </tbody>
                             </table>
                         </div>
@@ -140,7 +162,7 @@
             <section id="tab-registro" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Registro Histórico de Asistencia</h2>
-                    <p class="text-sm text-gray-500 mb-6">Aquí se guardarán todas las listas pasadas para consultarlas en cualquier momento.</p>
+                    <p class="text-sm text-gray-500 mb-6">Historial guardado permanentemente en la nube.</p>
                     
                     <div class="overflow-x-auto border rounded-xl">
                         <table class="w-full text-left border-collapse">
@@ -148,18 +170,10 @@
                                 <tr class="bg-gray-100 text-gray-600 text-sm">
                                     <th class="p-3">Fecha</th>
                                     <th class="p-3">Detalle</th>
-                                    <th class="p-3 text-center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-registro-body" class="divide-y">
-                                <!-- Datos de ejemplo -->
-                                <tr>
-                                    <td class="p-3 font-medium text-gray-800">12/09/2026</td>
-                                    <td class="p-3 text-sm text-gray-600">Registro guardado exitosamente.</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver detalles</button>
-                                    </td>
-                                </tr>
+                                <!-- Se cargan dinámicamente de Firebase -->
                             </tbody>
                         </table>
                     </div>
@@ -170,24 +184,18 @@
             <section id="tab-tareas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Asignación de Tareas</h2>
-                    <p class="text-sm text-gray-500 mb-4">Organización de pendientes y responsabilidades.</p>
+                    <p class="text-sm text-gray-500 mb-4">Organización de pendientes en tiempo real.</p>
 
                     <div id="panel-crear-tarea" class="bg-slate-50 p-4 rounded-xl border mb-6 hidden">
                         <h3 class="font-bold text-indigo-700 text-sm mb-3">➕ Asignar Nueva Tarea (Modo Admin)</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <input type="text" id="input-titulo-tarea" placeholder="Descripción de la tarea..." class="border rounded-lg px-4 py-2 sm:col-span-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <button onclick="agregarTarea()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition">Publicar Tarea</button>
+                            <button onclick="agregarTareaCloud()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition">Publicar Tarea</button>
                         </div>
                     </div>
 
                     <div id="contenedor-tareas" class="space-y-3">
-                        <div class="p-4 border rounded-xl flex justify-between items-center bg-white shadow-xs">
-                            <div>
-                                <p class="font-medium text-gray-800">Ejemplo: Comprar material para manualidades</p>
-                                <span class="text-xs text-gray-400">Asignado por: Carolina</span>
-                            </div>
-                            <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">Pendiente</span>
-                        </div>
+                        <!-- Se cargan dinámicamente de Firebase -->
                     </div>
                 </div>
             </section>
@@ -196,37 +204,31 @@
             <section id="tab-misas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Roles para Misas Dominicales</h2>
-                    <p class="text-sm text-gray-500 mb-6">Programación de Catequistas y Monaguillos en los tres horarios principales (6:30 a. m., 10:30 a. m. y 5:00 p. m.).</p>
+                    <p class="text-sm text-gray-500 mb-6">Programación para 6:30 a. m., 10:30 a. m. y 5:00 p. m. guardada en la nube.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Misa 6:30 am -->
                         <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
                             <div>
                                 <h3 class="font-bold text-indigo-700 text-lg mb-2">🌅 6:30 a. m.</h3>
-                                <label class="text-xs font-semibold text-gray-500">Catequistas y Monaguillos:</label>
                                 <textarea id="misa-630" placeholder="Ej: Carolina y Juan..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
                             </div>
                         </div>
-                        <!-- Misa 10:30 am -->
                         <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
                             <div>
                                 <h3 class="font-bold text-indigo-700 text-lg mb-2">☀️ 10:30 a. m.</h3>
-                                <label class="text-xs font-semibold text-gray-500">Catequistas y Monaguillos:</label>
                                 <textarea id="misa-1030" placeholder="Ej: Flor y Pedro..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
                             </div>
                         </div>
-                        <!-- Misa 5:00 pm -->
                         <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
                             <div>
                                 <h3 class="font-bold text-indigo-700 text-lg mb-2">🌙 5:00 p. m.</h3>
-                                <label class="text-xs font-semibold text-gray-500">Catequistas y Monaguillos:</label>
                                 <textarea id="misa-500" placeholder="Ej: María Elena y Sofía..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-6 flex justify-end">
-                        <button onclick="guardarMisas()" id="btn-guardar-misas" class="bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed" disabled>🔒 Guardar Horarios (Requiere Admin)</button>
+                        <button onclick="guardarMisasCloud()" id="btn-guardar-misas" class="bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed" disabled>🔒 Guardar Horarios (Requiere Admin)</button>
                     </div>
                 </div>
             </section>
@@ -235,25 +237,18 @@
             <section id="tab-chat" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border max-w-2xl mx-auto">
                     <h2 class="text-xl font-bold text-gray-800 mb-1">💬 Chat y Avisos Comunitarios</h2>
-                    <p class="text-xs text-gray-500 mb-4">Espacio de comunicación. <span class="text-indigo-600 font-medium">Nota: Las catequistas pueden moderar/borrar mensajes si es necesario.</span></p>
+                    <p class="text-xs text-gray-500 mb-4">Mensajes en tiempo real con moderación para administradoras.</p>
 
                     <div class="border rounded-xl p-3 bg-slate-50 mb-4 space-y-2">
                         <input type="text" id="chat-nombre" placeholder="Tu nombre..." class="w-full border rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <textarea id="chat-mensaje" placeholder="Escribe un mensaje o aviso..." class="w-full border rounded-lg p-3 text-sm bg-white h-20 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                         <div class="flex justify-end">
-                            <button onclick="enviarMensajeChat()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">Enviar Mensaje</button>
+                            <button onclick="enviarMensajeCloud()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">Enviar Mensaje</button>
                         </div>
                     </div>
 
                     <div id="contenedor-mensajes" class="space-y-3">
-                        <div class="p-3 bg-gray-50 border rounded-xl relative">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="font-bold text-xs text-indigo-700">Carolina (Catequista)</span>
-                                <span class="text-[10px] text-gray-400">Hoy</span>
-                            </div>
-                            <p class="text-sm text-gray-700">¡Bienvenidos al nuevo espacio web de la catequesis!</p>
-                            <button class="btn-borrar-msg hidden absolute top-2 right-2 text-red-500 text-xs bg-white border border-red-200 px-2 py-0.5 rounded shadow-xs hover:bg-red-50" onclick="this.parentElement.remove()">🗑️ Borrar</button>
-                        </div>
+                        <!-- Se cargan dinámicamente de Firebase -->
                     </div>
                 </div>
             </section>
@@ -306,9 +301,9 @@
                     btnMisas.innerText = "Guardar Horarios";
 
                     document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = false);
-                    document.querySelectorAll('.btn-borrar-msg').forEach(el => el.classList.remove('hidden'));
+                    window.cargarChatCloud();
 
-                    alert("¡Acceso concedido! Ya puedes gestionar la asistencia, añadir monaguillos, tareas, horarios y moderar el chat.");
+                    alert("¡Acceso concedido en la nube!");
                 } else if (password !== null) {
                     alert("Contraseña incorrecta.");
                 }
@@ -335,95 +330,165 @@
                 btnMisas.innerText = "🔒 Guardar Horarios (Requiere Admin)";
 
                 document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = true);
-                document.querySelectorAll('.btn-borrar-msg').forEach(el => el.classList.add('hidden'));
+                window.cargarChatCloud();
 
                 alert("Has salido del modo administrador.");
             }
         }
 
-        function agregarMonaguillo() {
+        // --- FUNCIONES FIREBASE CLOUD ---
+        window.agregarMonaguilloCloud = async function() {
             let nombre = document.getElementById('nombre-nuevo-monaguillo').value;
             if(!nombre) return alert("Escribe el nombre del monaguillo.");
+            try {
+                await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "monaguillos"), { nombre: nombre });
+                document.getElementById('nombre-nuevo-monaguillo').value = "";
+                window.cargarMonaguillosCloud();
+            } catch(e) { console.error(e); }
+        }
 
+        window.cargarMonaguillosCloud = async function() {
             let tbody = document.getElementById('tabla-monaguillos-body');
-            let nuevaFila = document.createElement('tr');
-            nuevaFila.innerHTML = `
-                <td class="p-3 font-medium text-gray-800">${nombre}</td>
-                <td class="p-3 text-center">
-                    <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
-                        <option value="Presente">Presente</option>
-                        <option value="Ausente">Ausente</option>
-                        <option value="Justificado">Justificado</option>
-                    </select>
-                </td>
-                <td class="p-3 text-center col-accion-admin">
-                    <button onclick="this.closest('tr').remove()" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded hover:bg-red-100">🗑️ Eliminar</button>
-                </td>
-            `;
-            tbody.appendChild(nuevaFila);
-            document.getElementById('nombre-nuevo-monaguillo').value = "";
+            tbody.innerHTML = "";
+            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "monaguillos"));
+            querySnapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-gray-800">${data.nombre}</td>
+                    <td class="p-3 text-center">
+                        <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
+                            <option value="Presente">Presente</option>
+                            <option value="Ausente">Ausente</option>
+                            <option value="Justificado">Justificado</option>
+                        </select>
+                    </td>
+                    <td class="p-3 text-center col-accion-admin ${esAdmin ? '' : 'hidden'}">
+                        <button onclick="eliminarMonaguilloCloud('${docSnap.id}')" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded hover:bg-red-100">🗑️ Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
-        function guardarAsistencia() {
-            let inputFecha = document.getElementById('fecha-asistencia').value;
-            let fechaTexto = inputFecha;
-            
-            // Si no pusieron fecha, ponemos la de hoy
-            if(!fechaTexto) {
-                let hoy = new Date();
-                fechaTexto = hoy.toLocaleDateString('es-ES');
-            }
-
-            // Simular agregarla a la tabla de Registro
-            let tbodyRegistro = document.getElementById('tabla-registro-body');
-            let nuevaFila = document.createElement('tr');
-            nuevaFila.innerHTML = `
-                <td class="p-3 font-medium text-gray-800">${fechaTexto}</td>
-                <td class="p-3 text-sm text-gray-600">Registro guardado exitosamente.</td>
-                <td class="p-3 text-center">
-                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver detalles</button>
-                </td>
-            `;
-            tbodyRegistro.prepend(nuevaFila);
-
-            alert("¡Asistencia del día " + fechaTexto + " guardada en el Registro!");
+        window.eliminarMonaguilloCloud = async function(id) {
+            await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "monaguillos", id));
+            window.cargarMonaguillosCloud();
         }
 
-        function agregarTarea() {
+        window.guardarAsistenciaCloud = async function() {
+            let fecha = document.getElementById('fecha-asistencia').value || new Date().toLocaleDateString('es-ES');
+            try {
+                await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
+                    fecha: fecha,
+                    detalle: "Asistencia guardada correctamente por administración."
+                });
+                alert("¡Asistencia guardada en la nube con éxito!");
+                window.cargarRegistroCloud();
+            } catch(e) { console.error(e); }
+        }
+
+        window.cargarRegistroCloud = async function() {
+            let tbody = document.getElementById('tabla-registro-body');
+            tbody.innerHTML = "";
+            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "registros_asistencia"));
+            querySnapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td class="p-3 font-medium text-gray-800">${data.fecha}</td><td class="p-3 text-sm text-gray-600">${data.detalle}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.agregarTareaCloud = async function() {
             let texto = document.getElementById('input-titulo-tarea').value;
-            if(!texto) return alert("Escribe una descripción para la tarea.");
-            
+            if(!texto) return alert("Escribe la tarea.");
+            try {
+                await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "tareas"), {
+                    texto: texto,
+                    estado: "Pendiente",
+                    autor: "Administrador"
+                });
+                document.getElementById('input-titulo-tarea').value = "";
+                window.cargarTareasCloud();
+            } catch(e) { console.error(e); }
+        }
+
+        window.cargarTareasCloud = async function() {
             let contenedor = document.getElementById('contenedor-tareas');
-            let nueva = document.createElement('div');
-            nueva.className = "p-4 border rounded-xl flex justify-between items-center bg-white shadow-xs";
-            nueva.innerHTML = `<div><p class="font-medium text-gray-800">${texto}</p><span class="text-xs text-gray-400">Asignado por: Administrador</span></div><span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">Pendiente</span>`;
-            contenedor.prepend(nueva);
-            document.getElementById('input-titulo-tarea').value = "";
-            alert("Tarea publicada correctamente.");
+            contenedor.innerHTML = "";
+            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "tareas"));
+            querySnapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                let div = document.createElement('div');
+                div.className = "p-4 border rounded-xl flex justify-between items-center bg-white shadow-xs";
+                div.innerHTML = `<div><p class="font-medium text-gray-800">${data.texto}</p><span class="text-xs text-gray-400">Asignado por: ${data.autor}</span></div><span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">${data.estado}</span>`;
+                contenedor.appendChild(div);
+            });
         }
 
-        function guardarMisas() {
-            alert("¡Roles de Misas y Monaguillos actualizados correctamente!");
+        window.guardarMisasCloud = async function() {
+            let m630 = document.getElementById('misa-630').value;
+            let m1030 = document.getElementById('misa-1030').value;
+            let m500 = document.getElementById('misa-500').value;
+            try {
+                await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, "config", "misas"), {
+                    m630: m630, m1030: m1030, m500: m500
+                });
+                alert("¡Roles de misas guardados en la nube!");
+            } catch(e) { console.error(e); }
         }
 
-        function enviarMensajeChat() {
+        window.cargarMisasCloud = async function() {
+            try {
+                let docSnap = await window.firebaseModules.getDoc(window.firebaseModules.doc(window.db, "config", "misas"));
+                if(docSnap.exists()) {
+                    let data = docSnap.data();
+                    document.getElementById('misa-630').value = data.m630 || "";
+                    document.getElementById('misa-1030').value = data.m1030 || "";
+                    document.getElementById('misa-500').value = data.m500 || "";
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        window.enviarMensajeCloud = async function() {
             let nombre = document.getElementById('chat-nombre').value;
             let mensaje = document.getElementById('chat-mensaje').value;
-            if(!nombre || !mensaje) return alert("Por favor escribe tu nombre y tu mensaje.");
+            if(!nombre || !mensaje) return alert("Escribe tu nombre y tu mensaje.");
+            try {
+                await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "chat"), {
+                    nombre: nombre,
+                    mensaje: mensaje,
+                    tiempo: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                });
+                document.getElementById('chat-mensaje').value = "";
+                window.cargarChatCloud();
+            } catch(e) { console.error(e); }
+        }
 
+        window.cargarChatCloud = async function() {
             let contenedor = document.getElementById('contenedor-mensajes');
-            let nuevoMsg = document.createElement('div');
-            nuevoMsg.className = "p-3 bg-gray-50 border rounded-xl relative";
-            nuevoMsg.innerHTML = `
-                <div class="flex justify-between items-center mb-1">
-                    <span class="font-bold text-xs text-indigo-700">${nombre}</span>
-                    <span class="text-[10px] text-gray-400">Hace un momento</span>
-                </div>
-                <p class="text-sm text-gray-700">${mensaje}</p>
-                <button class="btn-borrar-msg ${esAdmin ? '' : 'hidden'} absolute top-2 right-2 text-red-500 text-xs bg-white border border-red-200 px-2 py-0.5 rounded shadow-xs hover:bg-red-50" onclick="this.parentElement.remove()">🗑️ Borrar</button>
-            `;
-            contenedor.prepend(nuevoMsg);
-            document.getElementById('chat-mensaje').value = "";
+            contenedor.innerHTML = "";
+            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "chat"));
+            querySnapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                let div = document.createElement('div');
+                div.className = "p-3 bg-gray-50 border rounded-xl relative";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold text-xs text-indigo-700">${data.nombre}</span>
+                        <span class="text-[10px] text-gray-400">${data.tiempo || ''}</span>
+                    </div>
+                    <p class="text-sm text-gray-700">${data.mensaje}</p>
+                    <button class="btn-borrar-msg ${esAdmin ? '' : 'hidden'} absolute top-2 right-2 text-red-500 text-xs bg-white border border-red-200 px-2 py-0.5 rounded shadow-xs hover:bg-red-50" onclick="eliminarMensajeCloud('${docSnap.id}')">🗑️ Borrar</button>
+                `;
+                contenedor.appendChild(div);
+            });
+        }
+
+        window.eliminarMensajeCloud = async function(id) {
+            await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "chat", id));
+            window.cargarChatCloud();
         }
     </script>
 </body>
