@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catequesis - Control, Misas y Comunidad</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans flex flex-col justify-between">
+
+    <div>
+        <!-- Header -->
+        <header class="bg-indigo-700 text-white shadow-md">
+            <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold">⛪ Catequesis & Comunidad</h1>
+                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia y Roles</p>
+                </div>
+                <div class="mt-3 sm:mt-0 flex items-center space-x-3">
+                    <span id="estado-admin" class="bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600">Modo Público (Lectura)</span>
+                    <button onclick="toggleAdmin()" id="btn-login" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-indigo-500">🔑 Acceso Catequistas</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navegación por pestañas -->
+        <nav class="bg-white shadow-sm border-b sticky top-0 z-10">
+            <div class="max-w-6xl mx-auto flex justify-start sm:justify-center space-x-1 sm:space-x-6 px-4 overflow-x-auto">
+                <button onclick="cambiarTab('asistencia')" id="btn-asistencia" class="py-3 px-3 sm:px-4 font-medium text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap focus:outline-none transition">📅 Asistencia</button>
+                <button onclick="cambiarTab('registro')" id="btn-registro" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📋 Registro</button>
+                <button onclick="cambiarTab('tareas')" id="btn-tareas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📝 Tareas</button>
+                <button onclick="cambiarTab('misas')" id="btn-misas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">⛪ Misas y Monaguillos</button>
+                <button onclick="cambiarTab('chat')" id="btn-chat" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">💬 Chat / Avisos</button>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+            <!-- 1. SECCIÓN ASISTENCIA -->
+            <section id="tab-asistencia" class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Control de Asistencia</h2>
+                    <p class="text-sm text-gray-500 mb-6">Registro para Catequistas y Monaguillos (Las administradoras pueden guardar cambios y agregar monaguillos).</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
+                        <input type="date" id="fecha-asistencia" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none w-full sm:w-auto">
+                        <button onclick="guardarAsistencia()" id="btn-guardar-asistencia" class="bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto" disabled>🔒 Guardar Asistencia (Requiere Admin)</button>
+                    </div>
+
+                    <!-- Tabla Catequistas -->
+                    <div class="mb-8">
+                        <h3 class="font-bold text-indigo-700 text-base mb-3">👩‍🏫 Catequistas</h3>
+                        <div class="overflow-x-auto border rounded-xl">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-600 text-sm">
+                                        <th class="p-3">Nombre</th>
+                                        <th class="p-3 text-center">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y">
+                                    <tr>
+                                        <td class="p-3 font-medium text-gray-800">Carolina</td>
+                                        <td class="p-3 text-center">
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                                <option value="Presente">Presente</option>
+                                                <option value="Ausente">Ausente</option>
+                                                <option value="Justificado">Justificado</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-medium text-gray-800">Flor</td>
+                                        <td class="p-3 text-center">
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                                <option value="Presente">Presente</option>
+                                                <option value="Ausente">Ausente</option>
+                                                <option value="Justificado">Justificado</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-medium text-gray-800">María Elena</td>
+                                        <td class="p-3 text-center">
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                                <option value="Presente">Presente</option>
+                                                <option value="Ausente">Ausente</option>
+                                                <option value="Justificado">Justificado</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tabla Monaguillos -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-indigo-700 text-base">👦👧 Monaguillos</h3>
+                            <div id="panel-add-monaguillo" class="hidden flex gap-2">
+                                <input type="text" id="nombre-nuevo-monaguillo" placeholder="Nombre del monaguillo..." class="border rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <button onclick="agregarMonaguillo()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-1 rounded transition">+ Añadir</button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto border rounded-xl">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-600 text-sm">
+                                        <th class="p-3">Nombre</th>
+                                        <th class="p-3 text-center">Estado</th>
+                                        <th class="p-3 text-center col-accion-admin hidden">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-monaguillos-body" class="divide-y">
+                                    <tr>
+                                        <td class="p-3 font-medium text-gray-800">Juan (Ejemplo)</td>
+                                        <td class="p-3 text-center">
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                                <option value="Presente">Presente</option>
+                                                <option value="Ausente">Ausente</option>
+                                                <option value="Justificado">Justificado</option>
+                                            </select>
+                                        </td>
+                                        <td class="p-3 text-center col-accion-admin hidden">
+                                            <button onclick="this.closest('tr').remove()" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded hover:bg-red-100">🗑️ Eliminar</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 2. SECCIÓN REGISTRO HISTÓRICO -->
+            <section id="tab-registro" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Registro Histórico de Asistencia</h2>
+                    <p class="text-sm text-gray-500 mb-6">Aquí se guardarán todas las listas pasadas para consultarlas en cualquier momento.</p>
+                    
+                    <div class="overflow-x-auto border rounded-xl">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 text-sm">
+                                    <th class="p-3">Fecha</th>
+                                    <th class="p-3">Detalle</th>
+                                    <th class="p-3 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-registro-body" class="divide-y">
+                                <!-- Datos de ejemplo -->
+                                <tr>
+                                    <td class="p-3 font-medium text-gray-800">12/09/2026</td>
+                                    <td class="p-3 text-sm text-gray-600">Registro guardado exitosamente.</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver detalles</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. SECCIÓN TAREAS -->
+            <section id="tab-tareas" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Asignación de Tareas</h2>
+                    <p class="text-sm text-gray-500 mb-4">Organización de pendientes y responsabilidades.</p>
+
+                    <div id="panel-crear-tarea" class="bg-slate-50 p-4 rounded-xl border mb-6 hidden">
+                        <h3 class="font-bold text-indigo-700 text-sm mb-3">➕ Asignar Nueva Tarea (Modo Admin)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input type="text" id="input-titulo-tarea" placeholder="Descripción de la tarea..." class="border rounded-lg px-4 py-2 sm:col-span-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <button onclick="agregarTarea()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition">Publicar Tarea</button>
+                        </div>
+                    </div>
+
+                    <div id="contenedor-tareas" class="space-y-3">
+                        <div class="p-4 border rounded-xl flex justify-between items-center bg-white shadow-xs">
+                            <div>
+                                <p class="font-medium text-gray-800">Ejemplo: Comprar material para manualidades</p>
+                                <span class="text-xs text-gray-400">Asignado por: Carolina</span>
+                            </div>
+                            <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">Pendiente</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SECCIÓN MISAS Y MONAGUILLOS -->
+            <section id="tab-misas" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Roles para Misas Dominicales</h2>
+                    <p class="text-sm text-gray-500 mb-6">Programación de Catequistas y Monaguillos en los tres horarios principales (6:30 a. m., 10:30 a. m. y 5:00 p. m.).</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Misa 6:30 am -->
+                        <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-indigo-700 text-lg mb-2">🌅 6:30 a. m.</h3>
+                                <label class="text-xs font-semibold text-gray-500">Catequistas y Monaguillos:</label>
+                                <textarea id="misa-630" placeholder="Ej: Carolina y Juan..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
+                            </div>
+                        </div>
+                        <!-- Misa 10:30 am -->
+                        <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-indigo-700 text-lg mb-2">☀️ 10:30 a. m.</h3>
+                                <label class="text-xs font-semibold text-gray-500">Catequistas y Monaguillos:</label>
+                                <textarea id="misa-1030" placeholder="Ej: Flor y Pedro..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
+                            </div>
+                        </div>
+                        <!-- Misa 5:00 pm -->
+                        <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-indigo-700 text-lg mb-2">🌙 5:00 p. m.</h3>
+                                <label class="text-xs font-semibold text-gray-500">Catequistas y Monaguillos:</label>
+                                <textarea id="misa-500" placeholder="Ej: María Elena y Sofía..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="guardarMisas()" id="btn-guardar-misas" class="bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed" disabled>🔒 Guardar Horarios (Requiere Admin)</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
+            <section id="tab-chat" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border max-w-2xl mx-auto">
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">💬 Chat y Avisos Comunitarios</h2>
+                    <p class="text-xs text-gray-500 mb-4">Espacio de comunicación. <span class="text-indigo-600 font-medium">Nota: Las catequistas pueden moderar/borrar mensajes si es necesario.</span></p>
+
+                    <div class="border rounded-xl p-3 bg-slate-50 mb-4 space-y-2">
+                        <input type="text" id="chat-nombre" placeholder="Tu nombre..." class="w-full border rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <textarea id="chat-mensaje" placeholder="Escribe un mensaje o aviso..." class="w-full border rounded-lg p-3 text-sm bg-white h-20 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                        <div class="flex justify-end">
+                            <button onclick="enviarMensajeChat()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">Enviar Mensaje</button>
+                        </div>
+                    </div>
+
+                    <div id="contenedor-mensajes" class="space-y-3">
+                        <div class="p-3 bg-gray-50 border rounded-xl relative">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-xs text-indigo-700">Carolina (Catequista)</span>
+                                <span class="text-[10px] text-gray-400">Hoy</span>
+                            </div>
+                            <p class="text-sm text-gray-700">¡Bienvenidos al nuevo espacio web de la catequesis!</p>
+                            <button class="btn-borrar-msg hidden absolute top-2 right-2 text-red-500 text-xs bg-white border border-red-200 px-2 py-0.5 rounded shadow-xs hover:bg-red-50" onclick="this.parentElement.remove()">🗑️ Borrar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer personalizado -->
+    <footer class="bg-white border-t mt-12 py-6 text-center text-xs text-gray-500 space-y-1">
+        <p>© 2026 Catequesis Parroquial. Todos los derechos reservados.</p>
+        <p class="font-medium text-indigo-600">Creado por Roberto</p>
+    </footer>
+
+    <!-- Script de lógica e interfaz -->
+    <script>
+        let esAdmin = false;
+
+        function cambiarTab(tab) {
+            ['asistencia', 'registro', 'tareas', 'misas', 'chat'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('btn-' + t).className = "py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition";
+            });
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('btn-' + tab).className = "py-3 px-3 sm:px-4 font-medium text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap focus:outline-none transition";
+        }
+
+        function toggleAdmin() {
+            if (!esAdmin) {
+                let password = prompt("Introduce la contraseña de Administrador:");
+                if (password === "catequesis") {
+                    esAdmin = true;
+                    document.getElementById('estado-admin').innerText = "Modo Administrador Activo 🔓";
+                    document.getElementById('estado-admin').className = "bg-emerald-800 text-xs px-3 py-1 rounded-full text-emerald-200 border border-emerald-600";
+                    document.getElementById('btn-login').innerText = "🔒 Cerrar Sesión Admin";
+                    document.getElementById('btn-login').className = "bg-red-600 hover:bg-red-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-red-500";
+                    
+                    document.querySelectorAll('.select-asistencia').forEach(el => el.disabled = false);
+                    let btnAsis = document.getElementById('btn-guardar-asistencia');
+                    btnAsis.disabled = false;
+                    btnAsis.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-2 rounded-lg transition w-full sm:w-auto";
+                    btnAsis.innerText = "Guardar Asistencia";
+
+                    document.getElementById('panel-add-monaguillo').classList.remove('hidden');
+                    document.querySelectorAll('.col-accion-admin').forEach(el => el.classList.remove('hidden'));
+                    document.getElementById('panel-crear-tarea').classList.remove('hidden');
+
+                    let btnMisas = document.getElementById('btn-guardar-misas');
+                    btnMisas.disabled = false;
+                    btnMisas.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg transition";
+                    btnMisas.innerText = "Guardar Horarios";
+
+                    document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = false);
+                    document.querySelectorAll('.btn-borrar-msg').forEach(el => el.classList.remove('hidden'));
+
+                    alert("¡Acceso concedido! Ya puedes gestionar la asistencia, añadir monaguillos, tareas, horarios y moderar el chat.");
+                } else if (password !== null) {
+                    alert("Contraseña incorrecta.");
+                }
+            } else {
+                esAdmin = false;
+                document.getElementById('estado-admin').innerText = "Modo Público (Lectura)";
+                document.getElementById('estado-admin').className = "bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600";
+                document.getElementById('btn-login').innerText = "🔑 Acceso Catequistas";
+                document.getElementById('btn-login').className = "bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-indigo-500";
+
+                document.querySelectorAll('.select-asistencia').forEach(el => el.disabled = true);
+                let btnAsis = document.getElementById('btn-guardar-asistencia');
+                btnAsis.disabled = true;
+                btnAsis.className = "bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto";
+                btnAsis.innerText = "🔒 Guardar Asistencia (Requiere Admin)";
+
+                document.getElementById('panel-add-monaguillo').classList.add('hidden');
+                document.querySelectorAll('.col-accion-admin').forEach(el => el.classList.add('hidden'));
+                document.getElementById('panel-crear-tarea').classList.add('hidden');
+
+                let btnMisas = document.getElementById('btn-guardar-misas');
+                btnMisas.disabled = true;
+                btnMisas.className = "bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed";
+                btnMisas.innerText = "🔒 Guardar Horarios (Requiere Admin)";
+
+                document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = true);
+                document.querySelectorAll('.btn-borrar-msg').forEach(el => el.classList.add('hidden'));
+
+                alert("Has salido del modo administrador.");
+            }
+        }
+
+        function agregarMonaguillo() {
+            let nombre = document.getElementById('nombre-nuevo-monaguillo').value;
+            if(!nombre) return alert("Escribe el nombre del monaguillo.");
+
+            let tbody = document.getElementById('tabla-monaguillos-body');
+            let nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td class="p-3 font-medium text-gray-800">${nombre}</td>
+                <td class="p-3 text-center">
+                    <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
+                        <option value="Presente">Presente</option>
+                        <option value="Ausente">Ausente</option>
+                        <option value="Justificado">Justificado</option>
+                    </select>
+                </td>
+                <td class="p-3 text-center col-accion-admin">
+                    <button onclick="this.closest('tr').remove()" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded hover:bg-red-100">🗑️ Eliminar</button>
+                </td>
+            `;
+            tbody.appendChild(nuevaFila);
+            document.getElementById('nombre-nuevo-monaguillo').value = "";
+        }
+
+        function guardarAsistencia() {
+            let inputFecha = document.getElementById('fecha-asistencia').value;
+            let fechaTexto = inputFecha;
+            
+            // Si no pusieron fecha, ponemos la de hoy
+            if(!fechaTexto) {
+                let hoy = new Date();
+                fechaTexto = hoy.toLocaleDateString('es-ES');
+            }
+
+            // Simular agregarla a la tabla de Registro
+            let tbodyRegistro = document.getElementById('tabla-registro-body');
+            let nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td class="p-3 font-medium text-gray-800">${fechaTexto}</td>
+                <td class="p-3 text-sm text-gray-600">Registro guardado exitosamente.</td>
+                <td class="p-3 text-center">
+                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver detalles</button>
+                </td>
+            `;
+            tbodyRegistro.prepend(nuevaFila);
+
+            alert("¡Asistencia del día " + fechaTexto + " guardada en el Registro!");
+        }
+
+        function agregarTarea() {
+            let texto = document.getElementById('input-titulo-tarea').value;
+            if(!texto) return alert("Escribe una descripción para la tarea.");
+            
+            let contenedor = document.getElementById('contenedor-tareas');
+            let nueva = document.createElement('div');
+            nueva.className = "p-4 border rounded-xl flex justify-between items-center bg-white shadow-xs";
+            nueva.innerHTML = `<div><p class="font-medium text-gray-800">${texto}</p><span class="text-xs text-gray-400">Asignado por: Administrador</span></div><span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">Pendiente</span>`;
+            contenedor.prepend(nueva);
+            document.getElementById('input-titulo-tarea').value = "";
+            alert("Tarea publicada correctamente.");
+        }
+
+        function guardarMisas() {
+            alert("¡Roles de Misas y Monaguillos actualizados correctamente!");
+        }
+
+        function enviarMensajeChat() {
+            let nombre = document.getElementById('chat-nombre').value;
+            let mensaje = document.getElementById('chat-mensaje').value;
+            if(!nombre || !mensaje) return alert("Por favor escribe tu nombre y tu mensaje.");
+
+            let contenedor = document.getElementById('contenedor-mensajes');
+            let nuevoMsg = document.createElement('div');
+            nuevoMsg.className = "p-3 bg-gray-50 border rounded-xl relative";
+            nuevoMsg.innerHTML = `
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-xs text-indigo-700">${nombre}</span>
+                    <span class="text-[10px] text-gray-400">Hace un momento</span>
+                </div>
+                <p class="text-sm text-gray-700">${mensaje}</p>
+                <button class="btn-borrar-msg ${esAdmin ? '' : 'hidden'} absolute top-2 right-2 text-red-500 text-xs bg-white border border-red-200 px-2 py-0.5 rounded shadow-xs hover:bg-red-50" onclick="this.parentElement.remove()">🗑️ Borrar</button>
+            `;
+            contenedor.prepend(nuevoMsg);
+            document.getElementById('chat-mensaje').value = "";
+        }
+    </script>
+</body>
+</html>
