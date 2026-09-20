@@ -327,7 +327,7 @@
                                 <span id="icon-rec-1" class="text-xl">▼</span>
                             </button>
                             <div id="recurso-1" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué son:</strong> Las vinajeras son los dos pequeños recipientes donde se echan el vino y el agua. El aguamanil es la jarra con el cuenco para que el sacerdote se lave las manos.</p>
+                                <p><strong>Qué son:</strong> Recipientes para el vino y el agua, y la jarra con cuenco para el lavatorio de manos del sacerdote.</p>
                             </div>
                         </div>
                         <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
@@ -336,28 +336,28 @@
                                 <span id="icon-rec-2" class="text-xl">▼</span>
                             </button>
                             <div id="recurso-2" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué es:</strong> El libro oficial grande que contiene las oraciones y la Plegaria Eucarística.</p>
+                                <p><strong>Qué es:</strong> Libro oficial que contiene las oraciones de la Misa.</p>
                             </div>
                         </div>
-                        <!-- (Los demás recursos continúan igual) -->
                     </div>
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN HISTORIA DE LOS SANTOS -->
+            <!-- 7. SECCIÓN HISTORIA DE LOS SANTOS (LISTA AMPLIADA Y COMPLETA) -->
             <section id="tab-santos" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">✝️ Vidas e Historias de los Santos</h2>
-                    <p class="text-sm text-gray-500 mb-6">Conoce el testimonio y la historia de 50 grandes santos de la Iglesia católica.</p>
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">✝️ Enciclopedia de Vidas e Historias de los Santos</h2>
+                    <p class="text-sm text-gray-500 mb-6">Busca y descubre el testimonio de decenas de santos, mártires y beatos de la Iglesia.</p>
                     
                     <div class="mb-6">
-                        <input type="text" id="buscador-santos" onkeyup="filtrarSantos()" placeholder="🔍 Buscar un santo por nombre..." class="w-full border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50">
+                        <input type="text" id="buscador-santos" onkeyup="filtrarSantos()" placeholder="🔍 Escribe el nombre de un santo (ej. Tarcisio, Agustín, Catalina, Juan...)" class="w-full border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 font-medium">
                     </div>
 
                     <div id="lista-santos" class="space-y-3">
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san tarcisio patron de los monaguillos nino martir eucharistia">
+                        <!-- 1. San Tarcisio -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san tarcisio patrono monaguillos nino martir eucaristia">
                             <button onclick="toggleLectura('santo-1', 'icon-santo-1')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🧒 San Tarcisio (Patrono de los Monaguillos) — 15 de agosto</span>
+                                <span>🧒 1. San Tarcisio (Patrono de los Monaguillos) — 15 de agosto</span>
                                 <span id="icon-santo-1" class="text-xl">▼</span>
                             </button>
                             <div id="santo-1" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
@@ -365,9 +365,10 @@
                             </div>
                         </div>
 
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san agustin de hipona doctor de la iglesia confesor">
+                        <!-- 2. San Agustín -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san agustin de hipona doctor iglesia confesor">
                             <button onclick="toggleLectura('santo-2', 'icon-santo-2')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>📜 San Agustín de Hipona (Doctor de la Iglesia) — 28 de agosto</span>
+                                <span>📜 2. San Agustín de Hipona (Doctor de la Iglesia) — 28 de agosto</span>
                                 <span id="icon-santo-2" class="text-xl">▼</span>
                             </button>
                             <div id="santo-2" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
@@ -375,15 +376,534 @@
                             </div>
                         </div>
 
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa catalina de siena doctora de la iglesia">
+                        <!-- 3. Santa Catalina de Siena -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa catalina de siena doctora iglesia patrona europa">
                             <button onclick="toggleLectura('santo-3', 'icon-santo-3')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>👑 Santa Catalina de Siena (Doctora de la Iglesia) — 29 de abril</span>
+                                <span>👑 3. Santa Catalina de Siena (Doctora de la Iglesia) — 29 de abril</span>
                                 <span id="icon-santo-3" class="text-xl">▼</span>
                             </button>
                             <div id="santo-3" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
                                 <p><strong>Historia:</strong> Mística dominica que aconsejó a papas y gobernantes, patrona de Europa.</p>
                             </div>
                         </div>
+
+                        <!-- 4. San Francisco de Asís -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san francisco de asis pobreza animales paz">
+                            <button onclick="toggleLectura('santo-4', 'icon-santo-4')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌿 4. San Francisco de Asís — 4 de octubre</span>
+                                <span id="icon-santo-4" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-4" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Renunció a sus riquezas para vivir en pobreza evangélica, fundó los franciscanos y amaba profundamente la naturaleza.</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. Santa Teresita del Niño Jesús -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa teresita del nino jesus florecita caminito">
+                            <button onclick="toggleLectura('santo-5', 'icon-santo-5')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌸 5. Santa Teresita del Niño Jesús (Doctora) — 1 de octubre</span>
+                                <span id="icon-santo-5" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-5" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Monja carmelita del "caminito" espiritual, haciendo las pequeñas cosas con gran amor.</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. San Juan Bosco -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan bosco don bosco jovenes salesianos">
+                            <button onclick="toggleLectura('santo-6', 'icon-santo-6')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🧑‍🏫 6. San Juan Bosco (Don Bosco) — 31 de enero</span>
+                                <span id="icon-santo-6" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-6" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Padre y maestro de la juventud, fundador de los salesianos en Turín.</p>
+                            </div>
+                        </div>
+
+                        <!-- 7. Santo Tomás de Aquino -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santo tomas de aquino doctor angelico teologia">
+                            <button onclick="toggleLectura('santo-7', 'icon-santo-7')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📚 7. Santo Tomás de Aquino (Doctor Angélico) — 28 de enero</span>
+                                <span id="icon-santo-7" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-7" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Brillante filósofo y teólogo medieval, autor de la Suma Teológica.</p>
+                            </div>
+                        </div>
+
+                        <!-- 8. San José -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san jose esposo virgen maria patrono iglesia">
+                            <button onclick="toggleLectura('santo-8', 'icon-santo-8')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span> carpentry 8. San José (Esposo de la Virgen María) — 19 de marzo</span>
+                                <span id="icon-santo-8" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-8" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Custodio de la Sagrada Familia y patrono de la Iglesia universal.</p>
+                            </div>
+                        </div>
+
+                        <!-- 9. Santa Rosa de Lima -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa rosa de lima primera santa america peru">
+                            <button onclick="toggleLectura('santo-9', 'icon-santo-9')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌹 9. Santa Rosa de Lima (Patrona de América) — 23 de agosto</span>
+                                <span id="icon-santo-9" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-9" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Primera santa de América, entregada a la oración y servicio a los pobres en Lima.</p>
+                            </div>
+                        </div>
+
+                        <!-- 10. San Martín de Porres -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san martin de porres escoba peru humildad">
+                            <button onclick="toggleLectura('santo-10', 'icon-santo-10')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🧹 10. San Martín de Porres — 3 de noviembre</span>
+                                <span id="icon-santo-10" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-10" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fray dominico peruano famoso por su humildad, milagros y caridad.</p>
+                            </div>
+                        </div>
+
+                        <!-- 11. San Juan Pablo II -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan pablo ii papa jovenes">
+                            <button onclick="toggleLectura('santo-11', 'icon-santo-11')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🇻🇦 11. San Juan Pablo II — 22 de octubre</span>
+                                <span id="icon-santo-11" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-11" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Papa polaco promotor de las Jornadas Mundiales de la Juventud.</p>
+                            </div>
+                        </div>
+
+                        <!-- 12. Santa Teresa de Calcuta -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="madre teresa de calcuta caridad misioneras">
+                            <button onclick="toggleLectura('santo-12', 'icon-santo-12')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💙 12. Santa Teresa de Calcuta — 5 de septiembre</span>
+                                <span id="icon-santo-12" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-12" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fundadora de las Misioneras de la Caridad, sirviendo a los más pobres.</p>
+                            </div>
+                        </div>
+
+                        <!-- 13. San Antonio de Padua -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san antonio de padua cosas perdidas">
+                            <button onclick="toggleLectura('santo-13', 'icon-santo-13')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🍞 13. San Antonio de Padua — 13 de junio</span>
+                                <span id="icon-santo-13" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-13" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Gran predicador franciscano, invocado para encontrar objetos perdidos.</p>
+                            </div>
+                        </div>
+
+                        <!-- 14. San Judas Tadeo -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san judas tadeo abogado casos dificiles">
+                            <button onclick="toggleLectura('santo-14', 'icon-santo-14')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>✨ 14. San Judas Tadeo (Casos Difíciles) — 28 de octubre</span>
+                                <span id="icon-santo-14" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-14" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Apóstol de Jesús y patrono de las causas difíciles y desesperadas.</p>
+                            </div>
+                        </div>
+
+                        <!-- 15. San Expedito -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san expedito causas urgentes">
+                            <button onclick="toggleLectura('santo-15', 'icon-santo-15')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⚡ 15. San Expedito (Causas Urgentes) — 19 de abril</span>
+                                <span id="icon-santo-15" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-15" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Mártir romano conocido por su rápida respuesta en situaciones urgentes.</p>
+                            </div>
+                        </div>
+
+                        <!-- 16. San Nicolás de Mira -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san nicolas de mira papa noel">
+                            <button onclick="toggleLectura('santo-16', 'icon-santo-16')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🎁 16. San Nicolás de Mira — 6 de diciembre</span>
+                                <span id="icon-santo-16" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-16" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Obispo generoso cuyas acciones inspiraron la tradición de Papá Noel.</p>
+                            </div>
+                        </div>
+
+                        <!-- 17. San Valentín -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san valentin enamorados matrimonio">
+                            <button onclick="toggleLectura('santo-17', 'icon-santo-17')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>❤️ 17. San Valentín — 14 de febrero</span>
+                                <span id="icon-santo-17" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-17" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Sacerdote que defendió el matrimonio cristiano y fue martirizado.</p>
+                            </div>
+                        </div>
+
+                        <!-- 18. San Pablo -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pablo apostol de las gentes">
+                            <button onclick="toggleLectura('santo-18', 'icon-santo-18')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⚔️ 18. San Pablo (Apóstol de las Gentes) — 29 de junio</span>
+                                <span id="icon-santo-18" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-18" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Perseguidor convertido en el gran misionero del Evangelio por el Mediterráneo.</p>
+                            </div>
+                        </div>
+
+                        <!-- 19. San Pedro -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pedro primer papa apostol">
+                            <button onclick="toggleLectura('santo-19', 'icon-santo-19')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔑 19. San Pedro (Príncipe de los Apóstoles) — 29 de junio</span>
+                                <span id="icon-santo-19" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-19" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Pescador elegido por Jesús como roca de su Iglesia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 20. San Juan Evangelista -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan evangelista discipulo amado">
+                            <button onclick="toggleLectura('santo-20', 'icon-santo-20')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🦅 20. San Juan Evangelista — 27 de diciembre</span>
+                                <span id="icon-santo-20" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-20" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> El discípulo amado, autor del cuarto Evangelio y del Apocalipsis.</p>
+                            </div>
+                        </div>
+
+                        <!-- 21. Santa Lucía -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa lucia patrona vista ojos">
+                            <button onclick="toggleLectura('santo-21', 'icon-santo-21')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>👁️ 21. Santa Lucía — 13 de diciembre</span>
+                                <span id="icon-santo-21" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-21" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Mártir siciliana, protectora de la vista y los ojos.</p>
+                            </div>
+                        </div>
+
+                        <!-- 22. San Patricio -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san patricio irlanda trebol">
+                            <button onclick="toggleLectura('santo-22', 'icon-santo-22')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🍀 22. San Patricio de Irlanda — 17 de marzo</span>
+                                <span id="icon-santo-22" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-22" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Obispo que evangelizó Irlanda utilizando el trébol.</p>
+                            </div>
+                        </div>
+
+                        <!-- 23. Santa Águeda -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa agueda martir sicilia">
+                            <button onclick="toggleLectura('santo-23', 'icon-santo-23')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔥 23. Santa Águeda — 5 de febrero</span>
+                                <span id="icon-santo-23" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-23" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Joven noble que resistió crueles torturas por su fe.</p>
+                            </div>
+                        </div>
+
+                        <!-- 24. San Juan Bautista -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan bautista precursor jordand">
+                            <button onclick="toggleLectura('santo-24', 'icon-santo-24')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌊 24. San Juan Bautista — 24 de junio</span>
+                                <span id="icon-santo-24" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-24" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Precursor que bautizó a Jesús en el río Jordán.</p>
+                            </div>
+                        </div>
+
+                        <!-- 25. Santa Bernardita -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa bernadette lourdes apariciones">
+                            <button onclick="toggleLectura('santo-25', 'icon-santo-25')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💧 25. Santa Bernardita Soubirous — 16 de abril</span>
+                                <span id="icon-santo-25" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-25" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Pastora a quien se apareció la Virgen en Lourdes.</p>
+                            </div>
+                        </div>
+
+                        <!-- 26. San Benito -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san benito nursia ora et labora">
+                            <button onclick="toggleLectura('santo-26', 'icon-santo-26')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📖 26. San Benito de Nursia — 11 de julio</span>
+                                <span id="icon-santo-26" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-26" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Patriarca de los monjes de Occidente, creador de "Ora et labora".</p>
+                            </div>
+                        </div>
+
+                        <!-- 27. San Ignacio de Loyola -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san ignacio de loyola jesuitas">
+                            <button onclick="toggleLectura('santo-27', 'icon-santo-27')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🛡️ 27. San Ignacio de Loyola — 31 de julio</span>
+                                <span id="icon-santo-27" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-27" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fundador de los jesuitas y autor de los Ejercicios Espirituales.</p>
+                            </div>
+                        </div>
+
+                        <!-- 28. Santa Juana de Arco -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa juana de arco francia">
+                            <button onclick="toggleLectura('santo-28', 'icon-santo-28')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⚔️ 28. Santa Juana de Arco — 30 de mayo</span>
+                                <span id="icon-santo-28" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-28" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Heroína y mártir francesa que defendió su patria con valor.</p>
+                            </div>
+                        </div>
+
+                        <!-- 29. San Lorenzo -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san lorenzo martir parrilla">
+                            <button onclick="toggleLectura('santo-29', 'icon-santo-29')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔥 29. San Lorenzo Diácono — 10 de agosto</span>
+                                <span id="icon-santo-29" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-29" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Diácono romano que consideraba a los pobres como el tesoro de la Iglesia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 30. San Esteban -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san esteban protomartir">
+                            <button onclick="toggleLectura('santo-30', 'icon-santo-30')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🕊️ 30. San Esteban Protomártir — 26 de diciembre</span>
+                                <span id="icon-santo-30" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-30" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Primer mártir del cristianismo que perdonó a sus verdugos.</p>
+                            </div>
+                        </div>
+
+                        <!-- 31. San Francisco Javier -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san francisco javier asia misionero">
+                            <button onclick="toggleLectura('santo-31', 'icon-santo-31')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌏 31. San Francisco Javier — 3 de diciembre</span>
+                                <span id="icon-santo-31" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-31" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Gigante de la evangelización en la India y Japón.</p>
+                            </div>
+                        </div>
+
+                        <!-- 32. Santa Mónica -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa monica madre de agustin">
+                            <button onclick="toggleLectura('santo-32', 'icon-santo-32')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>👩‍👧 32. Santa Mónica — 27 de agosto</span>
+                                <span id="icon-santo-32" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-32" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Madre persistente en la oración por la conversión de San Agustín.</p>
+                            </div>
+                        </div>
+
+                        <!-- 33. San Vicente de Paúl -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san vicente de paul caridad pobres">
+                            <button onclick="toggleLectura('santo-33', 'icon-santo-33')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🍞 33. San Vicente de Paúl — 27 de septiembre</span>
+                                <span id="icon-santo-33" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-33" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Apóstol de la caridad y protector de los necesitados.</p>
+                            </div>
+                        </div>
+
+                        <!-- 34. San Juan de la Cruz -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan de la cruz mistico poeta">
+                            <button onclick="toggleLectura('santo-34', 'icon-santo-34')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📜 34. San Juan de la Cruz — 14 de diciembre</span>
+                                <span id="icon-santo-34" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-34" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Poeta místico y Doctor de la Iglesia carmelita.</p>
+                            </div>
+                        </div>
+
+                        <!-- 35. Santa Teresa de Ávila -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa teresa de avila jesus doctora">
+                            <button onclick="toggleLectura('santo-35', 'icon-santo-35')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⛪ 35. Santa Teresa de Ávila — 15 de octubre</span>
+                                <span id="icon-santo-35" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-35" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Reformadora del Carmelo y primera mujer Doctora de la Iglesia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 36. Padre Pío -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pio de pietrelcina padre pio estigmas">
+                            <button onclick="toggleLectura('santo-36', 'icon-santo-36')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🩸 36. San Pío de Pietrelcina (Padre Pío) — 23 de septiembre</span>
+                                <span id="icon-santo-36" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-36" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Sacerdote estigmatizado y célebre confesor capuchino.</p>
+                            </div>
+                        </div>
+
+                        <!-- 37. San Maximiliano Kolbe -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san maximiliano kolbe auschwitz martir">
+                            <button onclick="toggleLectura('santo-37', 'icon-santo-37')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⛓️ 37. San Maximiliano Kolbe — 14 de agosto</span>
+                                <span id="icon-santo-37" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-37" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Dio su vida por un padre de familia en el campo de Auschwitz.</p>
+                            </div>
+                        </div>
+
+                        <!-- 38. Santa Faustina -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa faustina kowalska misericordia">
+                            <button onclick="toggleLectura('santo-38', 'icon-santo-38')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>✨ 38. Santa Faustina Kowalska — 5 de octubre</span>
+                                <span id="icon-santo-38" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-38" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Apóstol de la Divina Misericordia en Polonia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 39. San Juan Macías -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan macias peru dominico">
+                            <button onclick="toggleLectura('santo-39', 'icon-santo-39')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🇵🇪 39. San Juan Macías — 18 de septiembre</span>
+                                <span id="icon-santo-39" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-39" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fray dominico portero en Lima, entregado a los pobres.</p>
+                            </div>
+                        </div>
+
+                        <!-- 40. San Roque -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san roque peregrino peste">
+                            <button onclick="toggleLectura('santo-40', 'icon-santo-40')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🐕 40. San Roque — 16 de agosto</span>
+                                <span id="icon-santo-40" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-40" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Peregrino protector contra las pestes y enfermedades.</p>
+                            </div>
+                        </div>
+
+                        <!-- 41. San Josemaría Escrivá -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san josemaria escriva opus dei trabajo">
+                            <button onclick="toggleLectura('santo-41', 'icon-santo-41')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💼 41. San Josemaría Escrivá — 26 de junio</span>
+                                <span id="icon-santo-41" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-41" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fundador del Opus Dei, predicador de la santidad en el trabajo ordinario.</p>
+                            </div>
+                        </div>
+
+                        <!-- 42. Santa Cecilia -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa cecilia patrona musica">
+                            <button onclick="toggleLectura('santo-42', 'icon-santo-42')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🎵 42. Santa Cecilia — 22 de noviembre</span>
+                                <span id="icon-santo-42" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-42" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Virgen y mártir romana, patrona universal de los músicos.</p>
+                            </div>
+                        </div>
+
+                        <!-- 43. San Martín de Tours -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san martin de tours capa">
+                            <button onclick="toggleLectura('santo-43', 'icon-santo-43')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🧥 43. San Martín de Tours — 11 de noviembre</span>
+                                <span id="icon-santo-43" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-43" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Soldado que compartió su capa con un mendigo.</p>
+                            </div>
+                        </div>
+
+                        <!-- 44. San Cristóbal -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san cristobal protector viajeros">
+                            <button onclick="toggleLectura('santo-44', 'icon-santo-44')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🚗 44. San Cristóbal — 25 de julio</span>
+                                <span id="icon-santo-44" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-44" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Gigante que cruzaba viajeros y llevó al Niño Jesús.</p>
+                            </div>
+                        </div>
+
+                        <!-- 45. San Felipe Neri -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san felipe neri alegria roma">
+                            <button onclick="toggleLectura('santo-45', 'icon-santo-45')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>😄 45. San Felipe Neri — 26 de mayo</span>
+                                <span id="icon-santo-45" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-45" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Santo de la alegría y del buen humor en Roma.</p>
+                            </div>
+                        </div>
+
+                        <!-- 46. Santa Inés -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa ines virgen martir cordero">
+                            <button onclick="toggleLectura('santo-46', 'icon-santo-46')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🐑 46. Santa Inés de Roma — 21 de enero</span>
+                                <span id="icon-santo-46" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-46" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Joven mártir de gran pureza, simbolizada con un cordero.</p>
+                            </div>
+                        </div>
+
+                        <!-- 47. Cura de Ars -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan vianney cura ars confesionario">
+                            <button onclick="toggleLectura('santo-47', 'icon-santo-47')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⛪ 47. San Juan María Vianney (Cura de Ars) — 4 de agosto</span>
+                                <span id="icon-santo-47" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-47" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Patrono de los sacerdotes, célebre por sus horas en el confesionario.</p>
+                            </div>
+                        </div>
+
+                        <!-- 48. Santa Filomena -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa filomena virgen martir">
+                            <button onclick="toggleLectura('santo-48', 'icon-santo-48')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⭐ 48. Santa Filomena — 11 de agosto</span>
+                                <span id="icon-santo-48" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-48" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Joven virgen y mártir descubierta en las catacumbas.</p>
+                            </div>
+                        </div>
+
+                        <!-- 49. San Damián de Molokai -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san damian de molokai leprosos">
+                            <button onclick="toggleLectura('santo-49', 'icon-santo-49')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🏝️ 49. San Damián de Molokai — 10 de mayo</span>
+                                <span id="icon-santo-49" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-49" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Apóstol de los leprosos en la isla hawaiana de Molokai.</p>
+                            </div>
+                        </div>
+
+                        <!-- 50. Carlo Acutis -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="carlo acutis ciberapostol eucaristia beato">
+                            <button onclick="toggleLectura('santo-50', 'icon-santo-50')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💻 50. Beato Carlo Acutis (Ciberapóstol) — 12 de octubre</span>
+                                <span id="icon-santo-50" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-50" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Joven informático enamorado de la Eucaristía, autopista hacia el cielo.</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -422,7 +942,6 @@
         let esAdmin = false;
         let usuarioActual = "";
 
-        // Al cargar la página, comprobar si ya hay un nombre guardado
         window.onload = function() {
             let guardado = localStorage.getItem('catequesis_usuario');
             if (guardado) {
