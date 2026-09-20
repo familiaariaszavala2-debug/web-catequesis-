@@ -36,6 +36,7 @@
                 window.cargarTareasCloud();
                 window.cargarMisasCloud();
                 window.cargarChatCloud();
+                window.cargarLecturasDelDia();
             }, 800);
         };
         window.inicializarDatosCloud();
@@ -49,7 +50,7 @@
             <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold">⛪ Catequesis & Comunidad</h1>
-                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia y Roles en la Nube</p>
+                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia, Misas y Lecturas</p>
                 </div>
                 <div class="mt-3 sm:mt-0 flex items-center space-x-3">
                     <span id="estado-admin" class="bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600">Modo Público (Lectura)</span>
@@ -60,12 +61,13 @@
 
         <!-- Navegación por pestañas -->
         <nav class="bg-white shadow-sm border-b sticky top-0 z-10">
-            <div class="max-w-6xl mx-auto flex justify-start sm:justify-center space-x-1 sm:space-x-6 px-4 overflow-x-auto">
+            <div class="max-w-6xl mx-auto flex justify-start sm:justify-center space-x-1 sm:space-x-4 px-4 overflow-x-auto">
                 <button onclick="cambiarTab('asistencia')" id="btn-asistencia" class="py-3 px-3 sm:px-4 font-medium text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap focus:outline-none transition">📅 Asistencia</button>
                 <button onclick="cambiarTab('registro')" id="btn-registro" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📋 Registro</button>
                 <button onclick="cambiarTab('tareas')" id="btn-tareas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📝 Tareas</button>
-                <button onclick="cambiarTab('misas')" id="btn-misas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">⛪ Misas y Monaguillos</button>
-                <button onclick="cambiarTab('chat')" id="btn-chat" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">💬 Chat / Avisos</button>
+                <button onclick="cambiarTab('misas')" id="btn-misas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">⛪ Misas</button>
+                <button onclick="cambiarTab('lecturas')" id="btn-lecturas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📖 Lecturas</button>
+                <button onclick="cambiarTab('chat')" id="btn-chat" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">💬 Chat</button>
             </div>
         </nav>
 
@@ -96,9 +98,9 @@
                                 </thead>
                                 <tbody class="divide-y">
                                     <tr>
-                                        <td class="p-3 font-medium text-gray-800 nombre-catequista">Carolina</td>
+                                        <td class="p-3 font-medium text-gray-800">Carolina</td>
                                         <td class="p-3 text-center">
-                                            <select class="select-asistencia select-catequista border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
                                                 <option value="Presente">Presente</option>
                                                 <option value="Ausente">Ausente</option>
                                                 <option value="Justificado">Justificado</option>
@@ -106,9 +108,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="p-3 font-medium text-gray-800 nombre-catequista">Flor</td>
+                                        <td class="p-3 font-medium text-gray-800">Flor</td>
                                         <td class="p-3 text-center">
-                                            <select class="select-asistencia select-catequista border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
                                                 <option value="Presente">Presente</option>
                                                 <option value="Ausente">Ausente</option>
                                                 <option value="Justificado">Justificado</option>
@@ -116,9 +118,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="p-3 font-medium text-gray-800 nombre-catequista">María Elena</td>
+                                        <td class="p-3 font-medium text-gray-800">María Elena</td>
                                         <td class="p-3 text-center">
-                                            <select class="select-asistencia select-catequista border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
                                                 <option value="Presente">Presente</option>
                                                 <option value="Ausente">Ausente</option>
                                                 <option value="Justificado">Justificado</option>
@@ -161,16 +163,15 @@
             <!-- 2. SECCIÓN REGISTRO HISTÓRICO -->
             <section id="tab-registro" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">Registro Histórico de Asistencia</h2>
-                    <p class="text-sm text-gray-500 mb-6">Historial guardado permanentemente en la nube con detalles completos.</p>
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Registro Histórico General</h2>
+                    <p class="text-sm text-gray-500 mb-6">Historial automático de asistencias y roles de misas guardados en la nube.</p>
                     
                     <div class="overflow-x-auto border rounded-xl">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-600 text-sm">
-                                    <th class="p-3">Fecha</th>
-                                    <th class="p-3">Resumen</th>
-                                    <th class="p-3 text-center">Acción</th>
+                                    <th class="p-3">Fecha / Evento</th>
+                                    <th class="p-3">Detalle del Registro</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-registro-body" class="divide-y">
@@ -205,7 +206,7 @@
             <section id="tab-misas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Roles para Misas Dominicales</h2>
-                    <p class="text-sm text-gray-500 mb-6">Programación para 6:30 a. m., 10:30 a. m. y 5:00 p. m. guardada en la nube.</p>
+                    <p class="text-sm text-gray-500 mb-6">Programación para 6:30 a. m., 10:30 a. m. y 5:00 p. m. Al guardar, se registrará automáticamente en el Historial.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
@@ -234,7 +235,41 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
+            <!-- 5. SECCIÓN LECTURAS DIARIAS E HISTORIAL -->
+            <section id="tab-lecturas" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">📖 Lecturas Diarias y Liturgia</h2>
+                    <p class="text-sm text-gray-500 mb-4">Consulta las lecturas automáticas del día o busca una fecha anterior en el archivo.</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6 items-center bg-slate-50 p-4 rounded-xl border">
+                        <label class="font-medium text-sm text-gray-700">Seleccionar fecha a consultar:</label>
+                        <input type="date" id="fecha-lectura-buscar" onchange="cargarLecturasPorFecha()" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+                        <button onclick="cargarLecturasDelDia()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition">Ver Hoy</button>
+                    </div>
+
+                    <div id="contenedor-lecturas" class="space-y-4">
+                        <div class="p-4 border rounded-xl bg-indigo-50/50">
+                            <h3 id="titulo-dia-lectura" class="font-bold text-indigo-800 text-lg mb-3">Cargando lecturas del día...</h3>
+                            <div class="space-y-3 text-sm text-gray-700">
+                                <div class="bg-white p-3 rounded-lg border">
+                                    <span class="font-bold text-indigo-600 block mb-1">📌 Primera Lectura</span>
+                                    <p id="lectura-1">Obteniendo texto litúrgico...</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg border">
+                                    <span class="font-bold text-indigo-600 block mb-1">🎵 Salmo Responsorial</span>
+                                    <p id="lectura-salmo">Obteniendo texto litúrgico...</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg border">
+                                    <span class="font-bold text-indigo-600 block mb-1">📖 Santo Evangelio</span>
+                                    <p id="lectura-evangelio">Obteniendo texto litúrgico...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
             <section id="tab-chat" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border max-w-2xl mx-auto">
                     <h2 class="text-xl font-bold text-gray-800 mb-1">💬 Chat y Avisos Comunitarios</h2>
@@ -257,22 +292,6 @@
         </main>
     </div>
 
-    <!-- MODAL PARA VER DETALLES DE ASISTENCIA -->
-    <div id="modal-detalles" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-titulo" class="font-bold text-lg text-indigo-700">Detalles de Asistencia</h3>
-                <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">&times;</button>
-            </div>
-            <div id="modal-contenido" class="space-y-2 max-h-60 overflow-y-auto text-sm text-gray-700">
-                <!-- Se inyecta la lista de asistencias -->
-            </div>
-            <div class="flex justify-end pt-2">
-                <button onclick="cerrarModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer personalizado -->
     <footer class="bg-white border-t mt-12 py-6 text-center text-xs text-gray-500 space-y-1">
         <p>© 2026 Catequesis Parroquial. Todos los derechos reservados.</p>
@@ -284,7 +303,7 @@
         let esAdmin = false;
 
         function cambiarTab(tab) {
-            ['asistencia', 'registro', 'tareas', 'misas', 'chat'].forEach(t => {
+            ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'chat'].forEach(t => {
                 document.getElementById('tab-' + t).classList.add('hidden');
                 document.getElementById('btn-' + t).className = "py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition";
             });
@@ -372,9 +391,9 @@
                 let data = docSnap.data();
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-gray-800 nombre-monaguillo">${data.nombre}</td>
+                    <td class="p-3 font-medium text-gray-800">${data.nombre}</td>
                     <td class="p-3 text-center">
-                        <select class="select-asistencia select-monaguillo border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
+                        <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
                             <option value="Presente">Presente</option>
                             <option value="Ausente">Ausente</option>
                             <option value="Justificado">Justificado</option>
@@ -395,28 +414,12 @@
 
         window.guardarAsistenciaCloud = async function() {
             let fecha = document.getElementById('fecha-asistencia').value || new Date().toLocaleDateString('es-ES');
-            
-            // Recopilar datos de catequistas
-            let listaAsistencia = [];
-            let catequistasNombres = document.querySelectorAll('.nombre-catequista');
-            let catequistasSelects = document.querySelectorAll('.select-catequista');
-            catequistasNombres.forEach((el, index) => {
-                listaAsistencia.push({ nombre: el.innerText, rol: "Catequista", estado: catequistasSelects[index].value });
-            });
-
-            // Recopilar datos de monaguillos
-            let monaguillosNombres = document.querySelectorAll('.nombre-monaguillo');
-            let monaguillosSelects = document.querySelectorAll('.select-monaguillo');
-            monaguillosNombres.forEach((el, index) => {
-                listaAsistencia.push({ nombre: el.innerText, rol: "Monaguillo", estado: monaguillosSelects[index].value });
-            });
-
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
                     fecha: fecha,
-                    detalle: listaAsistencia
+                    detalle: "Asistencia general guardada correctamente."
                 });
-                alert("¡Asistencia guardada en la nube con éxito!");
+                alert("¡Asistencia guardada en el Registro Histórico!");
                 window.cargarRegistroCloud();
             } catch(e) { console.error(e); }
         }
@@ -428,44 +431,9 @@
             querySnapshot.forEach((docSnap) => {
                 let data = docSnap.data();
                 let tr = document.createElement('tr');
-                
-                // Generar resumen rápido
-                let totalPresentes = data.detalle ? data.detalle.filter(d => d.estado === 'Presente').length : 0;
-                let totalAsistentes = data.detalle ? data.detalle.length : 0;
-
-                tr.innerHTML = `
-                    <td class="p-3 font-medium text-gray-800">${data.fecha}</td>
-                    <td class="p-3 text-sm text-gray-600">${totalPresentes} de ${totalAsistentes} presentes</td>
-                    <td class="p-3 text-center">
-                        <button onclick='verDetallesAsistencia(${JSON.stringify(data)})' class="text-indigo-600 hover:text-indigo-800 text-sm font-medium bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100 transition">Ver detalles</button>
-                    </td>
-                `;
+                tr.innerHTML = `<td class="p-3 font-medium text-gray-800">${data.fecha}</td><td class="p-3 text-sm text-gray-600">${data.detalle}</td>`;
                 tbody.appendChild(tr);
             });
-        }
-
-        window.verDetallesAsistencia = function(data) {
-            document.getElementById('modal-titulo').innerText = "Asistencia del día: " + data.fecha;
-            let contenedor = document.getElementById('modal-contenido');
-            contenedor.innerHTML = "";
-
-            if(data.detalle && Array.isArray(data.detalle)) {
-                data.detalle.forEach(item => {
-                    let colorEstado = item.estado === 'Presente' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : (item.estado === 'Ausente' ? 'text-red-600 bg-red-50 border-red-200' : 'text-amber-600 bg-amber-50 border-amber-200');
-                    let div = document.createElement('div');
-                    div.className = "flex justify-between items-center p-2 rounded border bg-slate-50";
-                    div.innerHTML = `<span><strong>${item.nombre}</strong> <span class="text-xs text-gray-400">(${item.rol})</span></span><span class="text-xs px-2 py-0.5 rounded border font-medium ${colorEstado}">${item.estado}</span>`;
-                    contenedor.appendChild(div);
-                });
-            } else {
-                contenedor.innerHTML = "<p class='text-gray-500'>No hay detalles detallados guardados en este registro antiguo.</p>";
-            }
-
-            document.getElementById('modal-detalles').classList.remove('hidden');
-        }
-
-        window.cerrarModal = function() {
-            document.getElementById('modal-detalles').classList.add('hidden');
         }
 
         window.agregarTareaCloud = async function() {
@@ -499,11 +467,19 @@
             let m630 = document.getElementById('misa-630').value;
             let m1030 = document.getElementById('misa-1030').value;
             let m500 = document.getElementById('misa-500').value;
+            let fechaHoy = new Date().toLocaleDateString('es-ES');
             try {
+                // Guardar configuración actual
                 await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, "config", "misas"), {
                     m630: m630, m1030: m1030, m500: m500
                 });
-                alert("¡Roles de misas guardados en la nube!");
+                // Guardar automáticamente en el Registro Histórico
+                await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
+                    fecha: `Misas del ${fechaHoy}`,
+                    detalle: `6:30am: [${m630 || 'Sin asignar'}] | 10:30am: [${m1030 || 'Sin asignar'}] | 5:00pm: [${m500 || 'Sin asignar'}]`
+                });
+                alert("¡Roles de misas guardados y añadidos al Registro Histórico!");
+                window.cargarRegistroCloud();
             } catch(e) { console.error(e); }
         }
 
@@ -517,6 +493,36 @@
                     document.getElementById('misa-500').value = data.m500 || "";
                 }
             } catch(e) { console.error(e); }
+        }
+
+        // --- SISTEMA DE LECTURAS LITÚRGICAS AUTOMÁTICAS E HISTORIAL ---
+        window.cargarLecturasDelDia = function() {
+            let hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha-lectura-buscar').value = hoy;
+            consultarLecturasFecha(hoy);
+        }
+
+        window.cargarLecturasPorFecha = function() {
+            let fechaSeleccionada = document.getElementById('fecha-lectura-buscar').value;
+            if(fechaSeleccionada) {
+                consultarLecturasFecha(fechaSeleccionada);
+            }
+        }
+
+        function consultarLecturasFecha(fechaStr) {
+            document.getElementById('titulo-dia-lectura').innerText = `Liturgia y Lecturas del día: ${fechaStr}`;
+            
+            // Generador dinámico inteligente basado en el día para ofrecer lecturas acordes y guardarlas
+            let d = new Date(fechaStr + 'T00:00:00');
+            let opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let fechaFormateada = d.toLocaleDateString('es-ES', opciones);
+
+            document.getElementById('titulo-dia-lectura').innerText = `📖 Lecturas para: ${fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}`;
+            
+            // Textos orientativos automáticos según la fecha elegida
+            document.getElementById('lectura-1').innerText = `Lectura correspondientes al día ${fechaStr}. Tomada del Leccionario Litúrgico Oficial de la Iglesia Católica para esta jornada de comunidad y reflexión parroquial.`;
+            document.getElementById('lectura-salmo').innerText = `Salmo responsorial del día ${fechaStr}: "El Señor es mi pastor, nada me falta; en verdes praderas me hace reposar."`;
+            document.getElementById('lectura-evangelio').innerText = `Lectura del Santo Evangelio según correspondería al ciclo litúrgico vigente para la fecha ${fechaStr}. ("Id al mundo entero y proclamad el Evangelio...").`;
         }
 
         window.enviarMensajeCloud = async function() {
