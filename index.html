@@ -50,7 +50,7 @@
             <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold">⛪ Catequesis & Comunidad</h1>
-                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia, Misas, Lecturas y Recursos</p>
+                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia, Misas, Lecturas, Recursos y Santos</p>
                 </div>
                 <div class="mt-3 sm:mt-0 flex items-center space-x-3">
                     <span id="estado-admin" class="bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600">Modo Público (Lectura)</span>
@@ -68,6 +68,7 @@
                 <button onclick="cambiarTab('misas')" id="btn-misas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">⛪ Misas</button>
                 <button onclick="cambiarTab('lecturas')" id="btn-lecturas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📖 Lecturas</button>
                 <button onclick="cambiarTab('recursos')" id="btn-recursos" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">🎒 Recursos</button>
+                <button onclick="cambiarTab('santos')" id="btn-santos" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">✝️ Santos</button>
                 <button onclick="cambiarTab('chat')" id="btn-chat" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">💬 Chat</button>
             </div>
         </nav>
@@ -301,7 +302,7 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN RECURSOS Y OBJETOS LITÚRGICOS (10 ELEMENTOS) -->
+            <!-- 6. SECCIÓN RECURSOS Y OBJETOS LITÚRGICOS -->
             <section id="tab-recursos" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">🎒 Guía de Objetos y Elementos Litúrgicos</h2>
@@ -433,7 +434,7 @@
                             </button>
                             <div id="recurso-10" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
                                 <p><strong>Qué es:</strong> Una larga franja de tela preciosa que se coloca sobre los hombros y cubre las manos del ministro cuando lleva la Custodia con el Santísimo Sacramento.</p>
-                                <p><strong>Cuándo se usa:</strong> En procesiones solemnes con el Santísimo o durante la Adoración y Bendición Eucarística.</p>
+                                <p><strong>Cuándo se usan:</strong> En procesiones solemnes con el Santísimo o durante la Adoración y Bendición Eucarística.</p>
                                 <p><strong>Cómo llevarlos y usarse correctamente:</strong> Se coloca sobre los hombros del sacerdote o diácono (o del monaguillo autorizado) asegurándose de que cubra completamente las manos para sujetar la custodia sin tocarla directamente con la piel.</p>
                             </div>
                         </div>
@@ -442,7 +443,337 @@
                 </div>
             </section>
 
-            <!-- 7. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
+            <!-- 7. SECCIÓN HISTORIA DE LOS SANTOS (50 SANTOS CON BUSCADOR) -->
+            <section id="tab-santos" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">✝️ Vidas e Historias de los Santos</h2>
+                    <p class="text-sm text-gray-500 mb-6">Conoce el testimonio y la historia de 50 grandes santos de la Iglesia católica para inspirarte cada día.</p>
+                    
+                    <!-- Buscador de Santos -->
+                    <div class="mb-6">
+                        <input type="text" id="buscador-santos" onkeyup="filtrarSantos()" placeholder="🔍 Buscar un santo por nombre..." class="w-full border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50">
+                    </div>
+
+                    <!-- Contenedor de la lista de santos -->
+                    <div id="lista-santos" class="space-y-3">
+                        <!-- 1. San Tarcisio -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san tarcisio patron de los monaguillos nino martir eucharistia">
+                            <button onclick="toggleLectura('santo-1', 'icon-santo-1')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🧒 San Tarcisio (Patrono de los Monaguillos) — 15 de agosto</span>
+                                <span id="icon-santo-1" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-1" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Joven acólito del siglo III en Roma. Durante una persecución a los cristianos, se ofreció voluntariamente a llevar la Sagrada Eucaristía (el Cuerpo de Cristo) a los cristianos encarcelados que iban a morir al día siguiente. Por el camino, unos jóvenes paganos le exigieron que les mostrara lo que llevaba escondido. Negándose a profanar el sacramento, fue apedreado y golpeado hasta la muerte por la turba. Es considerado el santo patrono de los monaguillos y acólitos por su valentía y amor extremo a la Eucaristía.</p>
+                            </div>
+                        </div>
+
+                        <!-- 2. San Agustín de Hipona -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san agustin de hipona doctor de la iglesia confesor">
+                            <button onclick="toggleLectura('santo-2', 'icon-santo-2')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📜 San Agustín de Hipona (Doctor de la Iglesia) — 28 de agosto</span>
+                                <span id="icon-santo-2" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-2" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Nacido en Tagaste (África), vivió una juventud alejada de la fe y entregada a los placeres y filosofías mundanas. Gracias a las constantes oraciones de su madre, Santa Mónica, y a la predicación de San Ambrosio, experimentó una profunda conversión. Se bautizó, fue ordenado sacerdote y obispo de Hipona. Escribió obras fundamentales para la teología cristiana como las <em>Confesiones</em> y la <em>Ciudad de Dios</em>. Es uno de los pensadores y teólogos más grandes de la historia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. Santa Catalina de Siena -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa catalina de siena doctora de la iglesia patrona de europa">
+                            <button onclick="toggleLectura('santo-3', 'icon-santo-3')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>👑 Santa Catalina de Siena (Doctora de la Iglesia) — 29 de abril</span>
+                                <span id="icon-santo-3" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-3" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Mística dominica del siglo XIV que, a pesar de no tener estudios formales, aconsejó a papas, reyes y gobernantes con una autoridad espiritual extraordinaria. Trabajó incansablemente por la paz en Italia y convenció al Papa Gregorio XI para que regresara de Aviñón a Roma. Fue declarada Doctora de la Iglesia y Patrona de Europa.</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. San Francisco de Asís -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san francisco de asis pobreza animales paz">
+                            <button onclick="toggleLectura('santo-4', 'icon-santo-4')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌿 San Francisco de Asís — 4 de octubre</span>
+                                <span id="icon-santo-4" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-4" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Hijo de un rico comerciante, renunció a todas sus riquezas y lujos para abrazar la "Dama Pobreza" y servir a los leprosos y necesitados. Fundó la Orden de los Frailes Menores ( Franciscanos). Amaba profundamente la naturaleza, llamando hermanos al sol, a la luna y a los animales, y recibió los estigmas de la Pasión de Cristo en su cuerpo poco antes de morir.</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. Santa Teresita del Niño Jesús -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa teresita del nino jesus florecita camino espiritual">
+                            <button onclick="toggleLectura('santo-5', 'icon-santo-5')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span id="name-santo-5">🌸 Santa Teresita del Niño Jesús (Doctora de la Iglesia) — 1 de octubre</span>
+                                <span id="icon-santo-5" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-5" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Monja carmelita francesa que falleció muy joven (a los 24 años). Es famosa por su "caminito" espiritual, que consiste en hacer las cosas pequeñas de la vida ordinaria con un amor extraordinario a Dios. Autora de <em>Historia de un alma</em>, es patrona de las misiones y Doctora de la Iglesia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. San Juan Bosco -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan bosco don bosco jovenes salesianos patrono">
+                            <button onclick="toggleLectura('santo-6', 'icon-santo-6')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🧑‍🏫 San Juan Bosco (Don Bosco) — 31 de enero</span>
+                                <span id="icon-santo-6" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-6" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Sacerdote italiano del siglo XIX que dedicó su vida entera a la educación y formación cristiana de los niños y jóvenes más necesitados y huérfanos en Turín. Fundó la Congregación Salesiana y las Hijas de María Auxiliadora, basando su método pedagógico en el amor, la razón y la religión ("prevenir, no reprimir").</p>
+                            </div>
+                        </div>
+
+                        <!-- 7. Santo Tomás de Aquino -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santo tomas de aquino doctor angelico teologia">
+                            <button onclick="toggleLectura('santo-7', 'icon-santo-7')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📚 Santo Tomás de Aquino (Doctor Angélico) — 28 de enero</span>
+                                <span id="icon-santo-7" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-7" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fraile dominico conocido como el "Doctor Angélico". Fue uno de los filósofos y teólogos más brillantes de la Edad Media, autor de la monumental <em>Suma Teológica</em>. Logró armonizar de manera perfecta la fe cristiana con la filosofía de Aristóteles, destacando siempre que la razón y la fe vienen de Dios.</p>
+                            </div>
+                        </div>
+
+                        <!-- 8. San José -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san jose esposo de la virgen maria patrono de la iglesia">
+                            <button onclick="toggleLectura('santo-8', 'icon-santo-8')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span> carpentry San José (Esposo de la Virgen María) — 19 de marzo</span>
+                                <span id="icon-santo-8" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-8" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Humilde carpintero de Nazaret, custodio fiel de la Sagrada Familia y padre adoptivo de Jesús en la tierra. Las Escrituras lo describen como un hombre justo, obediente a la voz de Dios y protector silencioso y diligente. Es patrono de la Iglesia universal y de los trabajadores.</p>
+                            </div>
+                        </div>
+
+                        <!-- 9. Santa Rosa de Lima -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa rosa de lima primera santa de america peru">
+                            <button onclick="toggleLectura('santo-9', 'icon-santo-9')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌹 Santa Rosa de Lima (Primera Santa de América) — 23 de agosto</span>
+                                <span id="icon-santo-9" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-9" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Nacida en Lima (Perú) en el siglo XVI, Isabel Flores de Oliva destacó por su intensa vida de oración, penitencia y profunda caridad hacia los enfermos y los indígenas pobres a quienes atendía en su propia casa. Fue la primera persona de América en ser canonizada por la Iglesia.</p>
+                            </div>
+                        </div>
+
+                        <!-- 10. San Martín de Porres -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san martin de porres escoba peru humildad caridad">
+                            <button onclick="toggleLectura('santo-10', 'icon-santo-10')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🧹 San Martín de Porres — 3 de noviembre</span>
+                                <span id="icon-santo-10" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-10" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Fray dominico peruano, hijo de español y mujer negra libre. Realizaba las tareas más humildes del convento (como la enfermería y la limpieza) con una alegría inmensa. Se le atribuyen dones extraordinarios de sanación, bilocación y un gran amor por todos los animales y marginados de Lima.</p>
+                            </div>
+                        </div>
+
+                        <!-- 11 a 50 (Listado enriquecido de santos esenciales) -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan pablo ii papa jovenes">
+                            <button onclick="toggleLectura('santo-11', 'icon-santo-11')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🇻🇦 11. San Juan Pablo II — 22 de octubre</span>
+                                <span id="icon-santo-11" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-11" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Papa polaco que guió a la Iglesia durante el cambio de milenio. Viajero incansable, gran defensor de los derechos humanos, promotor de las Jornadas Mundiales de la Juventud (JMJ) y autor de una vasta obra espiritual. Su lema era "¡No tengáis miedo!".</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="madre teresa de calcuta calculta caridad misioneros">
+                            <button onclick="toggleLectura('santo-12', 'icon-santo-12')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💙 12. Santa Teresa de Calcuta — 5 de septiembre</span>
+                                <span id="icon-santo-12" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-12" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Monja albanesa fundadora de las Misioneras de la Caridad. Dedicó su vida entera a cuidar a "los más pobres entre los pobres", enfermos terminales y moribundos en las calles de Calcuta (India), viendo en cada uno de ellos el rostro sufriente de Jesús.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san antonio de padua patrono cosas perdidas">
+                            <button onclick="toggleLectura('santo-13', 'icon-santo-13')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🍞 13. San Antonio de Padua — 13 de junio</span>
+                                <span id="icon-santo-13" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-13" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Sacerdote franciscano portugués célebre por su maravillosa elocuencia, su profundo conocimiento de las Escrituras y su gran capacidad para conmover los corazones. Es uno de los santos más populares del mundo y tradicionalmente invocado para encontrar objetos perdidos.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san judas tadeo abogado casos dificiles">
+                            <button onclick="toggleLectura('santo-14', 'icon-santo-14')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>✨ 14. San Judas Tadeo (Abogado de causas difíciles) — 28 de octubre</span>
+                                <span id="icon-santo-14" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-14" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Uno de los doce apóstoles de Jesús, pariente de Santiago. Predicó el Evangelio con gran celo en Judea, Mesopotamia y Persia, donde sufrió el martirio junto con San Simón. Es universalmente invocado por los fieles en momentos de extrema dificultad o desesperanza.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san expedito causas urgentes">
+                            <button onclick="toggleLectura('santo-15', 'icon-santo-15')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⚡ 15. San Expedito (Patrono de las causas urgentes) — 19 de abril</span>
+                                <span id="icon-santo-15" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-15" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Militar romano que comandó la legión fulminante. Al decidir convertirse al cristianismo, cuenta la tradición que el demonio se le apareció en forma de cuervo intentando retrasar su decisión para el día siguiente; Expedito lo aplastó diciendo "¡Hoy mismo seré cristiano!". Por eso es patrono de las causas justas y urgentes.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san nicolas de mira papa noel bondad">
+                            <button onclick="toggleLectura('santo-16', 'icon-santo-16')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🎁 16. San Nicolás de Mira — 6 de diciembre</span>
+                                <span id="icon-santo-16" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-16" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Obispo de Myra (Asia Menor) en el siglo IV, famoso por su enorme generosidad secreta hacia los pobres y necesitados (origen histórico de la tradición de Papá Noel / Santa Claus). Defendió con firmeza la doctrina católica en el Concilio de Nicea.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san Valentin enamorados">
+                            <button onclick="toggleLectura('santo-17', 'icon-santo-17')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>❤️ 17. San Valentín — 14 de febrero</span>
+                                <span id="icon-santo-17" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-17" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Sacerdote romano que desafió las órdenes del emperador Claudio II al casar en secreto a los jóvenes soldados cristianos. Fue martirizado por defender el sacramento del matrimonio cristiano y el amor fiel.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pablo apostol de las gentes">
+                            <button onclick="toggleLectura('santo-18', 'icon-santo-18')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⚔️ 18. San Pablo (Apóstol de las Gentes) — 29 de junio</span>
+                                <span id="icon-santo-18" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-18" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Inicialmente feroz perseguidor de los primeros cristianos, experimentó una fulminante conversión al ser cegado por Cristo resucitado en el camino a Damasco. Se convirtió en el gran misionero del Mediterráneo y autor de la mayor parte de las epístolas del Nuevo Testamento.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pedro primer papa apóstol">
+                            <button onclick="toggleLectura('santo-19', 'icon-santo-19')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔑 19. San Pedro (Príncipe de los Apóstoles) — 29 de junio</span>
+                                <span id="icon-santo-19" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-19" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Pescador de Galilea llamado por Jesús para ser la "roca" sobre la cual edificaría Su Iglesia. A pesar de sus debilidades y de haberlo negado durante la Pasión, se arrepintió profundamente y guió con valentía a la comunidad de Jerusalén y Roma hasta morir crucificado cabeza abajo.</p>
+                            </div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan evangelista apostol amado">
+                            <button onclick="toggleLectura('santo-20', 'icon-santo-20')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🦅 20. San Juan Evangelista (El Discípulo Amado) — 27 de diciembre</span>
+                                <span id="icon-santo-20" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-20" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Historia:</strong> Apóstol joven, hermano de Santiago. Fue el único de los apóstoles que permaneció junto a la cruz de Jesús y a quien el Señor le encomendó el cuidado de su madre, la Virgen María. Escribió el cuarto Evangelio, las Cartas y el libro del Apocalipsis.</p>
+                            </div>
+                        </div>
+
+                        <!-- Santos 21 al 50 de referencia rápida -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa lucia patrona de la vista ojos">
+                            <button onclick="toggleLectura('santo-21', 'icon-santo-21')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>👁️ 21. Santa Lucía (Virgen y Mártir) — 13 de diciembre</span>
+                                <span id="icon-santo-21" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-21" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Mártir de Siracusa que entregó su virginidad a Cristo y repartió sus bienes entre los pobres. Es invocada universalmente como protectora de la vista y de los ojos.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san patricio apostol de irlanda">
+                            <button onclick="toggleLectura('santo-22', 'icon-santo-22')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🍀 22. San Patricio de Irlanda — 17 de marzo</span>
+                                <span id="icon-santo-22" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-22" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Obispo que evangelizó todo el territorio de Irlanda en el siglo V, utilizando el trébol de tres hojas para explicar de forma sencilla el misterio de la Santísima Trinidad.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa agueda martir">
+                            <button onclick="toggleLectura('santo-23', 'icon-santo-23')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔥 23. Santa Águeda de Catania — 5 de febrero</span>
+                                <span id="icon-santo-23" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-23" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Joven noble siciliana que soportó crueles torturas por mantenerse fiel a su fe cristiana, convirtiéndose en modelo de fortaleza y pureza.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan bautista precursor">
+                            <button onclick="toggleLectura('santo-24', 'icon-santo-24')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🌊 24. San Juan Bautista (El Precursor) — 24 de junio</span>
+                                <span id="icon-santo-24" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-24" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Primo de Jesús que bautizaba en el río Jordán llamando a la conversión y preparando los caminos al Señor. Murió decapitado por defender la ley de Dios.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa bernadette lourdes apariciones">
+                            <button onclick="toggleLectura('santo-25', 'icon-santo-25')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💧 25. Santa Bernardita Soubirous — 16 de abril</span>
+                                <span id="icon-santo-25" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-25" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Humilde pastora francesa a quien se le apareció la Virgen María en la gruta de Lourdes, revelándose como "La Inmaculada Concepción".</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san benito de nursia medalla exorcismo">
+                            <button onclick="toggleLectura('santo-26', 'icon-santo-26')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📖 26. San Benito de Nursia — 11 de julio</span>
+                                <span id="icon-santo-26" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-26" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Patrono de Europa y fundador del monaquismo occidental. Creador de la famosa Regla monástica basada en el lema *"Ora et labora"* (Reza y trabaja).</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san ignacio de loyola jesuitas">
+                            <button onclick="toggleLectura('santo-27', 'icon-santo-27')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🛡️ 27. San Ignacio de Loyola — 31 de julio</span>
+                                <span id="icon-santo-27" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-27" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Antiguo soldado herido en combate cuya lectura espiritual cambió su vida. Fundó la Compañía de Jesucristo (Jesuitas) y escribió los célebres Ejercicios Espirituales.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa juana de arco patrona de francia">
+                            <button onclick="toggleLectura('santo-28', 'icon-santo-28')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>⚔️ 28. Santa Juana de Arco — 30 de mayo</span>
+                                <span id="icon-santo-28" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-28" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Joven campesina guiada por voces celestiales que lideró al ejército francés en la Guerra de los Cien Años. Murió quemada en la hoguera defendiendo su fe.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san lorenzo martir parrilla">
+                            <button onclick="toggleLectura('santo-29', 'icon-santo-29')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔥 29. San Lorenzo Diácono y Mártir — 10 de agosto</span>
+                                <span id="icon-santo-29" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-29" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Diácono romano encargado de los bienes de la Iglesia. Cuando le exigieron los tesoros imperiales, presentó a los pobres y enfermos diciendo que ellos eran el verdadero tesoro de la Iglesia.</p></div>
+                        </div>
+
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san esteban primer martir">
+                            <button onclick="toggleLectura('santo-30', 'icon-santo-30')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🕊️ 30. San Esteban (Protomártir) — 26 de diciembre</span>
+                                <span id="icon-santo-30" class="text-xl">▼</span>
+                            </button>
+                            <div id="santo-30" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Primer diácono y primer mártir del cristianismo, quien perdonó a sus verdugos mientras era apedreado imitando el amor de Jesucristo.</p></div>
+                        </div>
+
+                        <!-- Del 31 al 50 en bloques limpios resumidos para completar la lista total de 50 santos -->
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san francisco javier misionero asia"><button onclick="toggleLectura('santo-31', 'icon-santo-31')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🌏 31. San Francisco Javier — 3 de diciembre</span><span id="icon-santo-31" class="text-xl">▼</span></button><div id="santo-31" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Gran misionero jesuita que llevó el Evangelio a la India y Japón con incansable celo apostólico.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa monica madre de agustin"><button onclick="toggleLectura('santo-32', 'icon-santo-32')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>👩‍👧 32. Santa Mónica — 27 de agosto</span><span id="icon-santo-32" class="text-xl">▼</span></button><div id="santo-32" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Madre de San Agustín, famosa por sus lágrimas y oraciones constantes durante años pidiendo la conversión de su hijo.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san vicente de paul caridad pobres"><button onclick="toggleLectura('santo-33', 'icon-santo-33')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🍞 33. San Vicente de Paúl — 27 de septiembre</span><span id="icon-santo-33" class="text-xl">▼</span></button><div id="santo-33" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Apóstol de la caridad organizada, creador de las Conferencias de San Vicente y protector de los pobres y huérfanos.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan de la cruz doctor mistico"><button onclick="toggleLectura('santo-34', 'icon-santo-34')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>📜 34. San Juan de la Cruz — 14 de diciembre</span><span id="icon-santo-34" class="text-xl">▼</span></button><div id="santo-34" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Fraile carmelita, poeta místico y Doctor de la Iglesia, reformador junto a Santa Teresa de Ávila.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa teresa de avila doctora iglesia"><button onclick="toggleLectura('santo-35', 'icon-santo-35')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>⛪ 35. Santa Teresa de Ávila (Jesús) — 15 de octubre</span><span id="icon-santo-35" class="text-xl">▼</span></button><div id="santo-35" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Monja carmelita reformadora, mística y escritora genial, primera mujer declarada Doctora de la Iglesia.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pio de pietrelcina padre pio estigmas"><button onclick="toggleLectura('santo-36', 'icon-santo-36')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🩸 36. San Pío de Pietrelcina (Padre Pío) — 23 de septiembre</span><span id="icon-santo-36" class="text-xl">▼</span></button><div id="santo-36" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Sacerdote capuchino italiano que portó los estigmas de la Pasión durante 50 años y fue un confesor extraordinario.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san maximiliano kolbe martir Auschwitz"><button onclick="toggleLectura('santo-37', 'icon-santo-37')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>⛓️ 37. San Maximiliano Kolbe — 14 de agosto</span><span id="icon-santo-37" class="text-xl">▼</span></button><div id="santo-37" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Sacerdote franciscano polaco que ofreció voluntariamente su vida a cambio de la de un padre de familia en el campo de concentración de Auschwitz.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa faustina kowalska misericordia divina"><button onclick="toggleLectura('santo-38', 'icon-santo-38')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>✨ 38. Santa Faustina Kowalska — 5 de octubre</span><span id="icon-santo-38" class="text-xl">▼</span></button><div id="santo-38" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Religiosa polaca a quien Jesús se le apareció para difundir por todo el mundo la devoción a la Divina Misericordia.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan alfonso de macias peru"><button onclick="toggleLectura('santo-39', 'icon-santo-39')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🇵🇪 39. San Juan Macías — 18 de septiembre</span><span id="icon-santo-39" class="text-xl">▼</span></button><div id="santo-39" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Fray dominico portero en Lima (Perú), famoso por su gran caridad hacia los pobres y su vida de constante oración.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san roque peregrino peste perros"><button onclick="toggleLectura('santo-40', 'icon-santo-40')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🐕 40. San Roque de Montpellier — 16 de agosto</span><span id="icon-santo-40" class="text-xl">▼</span></button><div id="santo-40" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Peregrino francés que dedicó su vida a curar enfermos de peste durante la Edad Media. Es patrono contra las pestes y protector de los animales.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san josemaria escriva opus dei"><button onclick="toggleLectura('santo-41', 'icon-santo-41')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>💼 41. San Josemaría Escrivá — 26 de junio</span><span id="icon-santo-41" class="text-xl">▼</span></button><div id="santo-41" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Fundador del Opus Dei, predicó la santificación del trabajo ordinario y de la vida diaria de cada cristiano en el mundo.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa cecilia patrona musica"><button onclick="toggleLectura('santo-42', 'icon-santo-42')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🎵 42. Santa Cecilia — 22 de noviembre</span><span id="icon-santo-42" class="text-xl">▼</span></button><div id="santo-42" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Noble romana martirizada por su fe. Es la patrona universal de los músicos, coros y poetas cristianos.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san martin de tours capa partió"><button onclick="toggleLectura('santo-43', 'icon-santo-43')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🧥 43. San Martín de Tours — 11 de noviembre</span><span id="icon-santo-43" class="text-xl">▼</span></button><div id="santo-43" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Soldado romano que cortó su propia capa en dos para dársela a un mendigo hambriento con frío, descubriendo después que era Jesús.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san cristobal protector viajeros"><button onclick="toggleLectura('santo-44', 'icon-santo-44')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🚗 44. San Cristóbal — 25 de julio</span><span id="icon-santo-44" class="text-xl">▼</span></button><div id="santo-44" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Gigante legendario que ayudaba a cruzar un peligroso río a los viajeros, hasta que una vez cargó a un niño que pesaba tanto como el mundo: era Jesús.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san felipe neri alegria bromista"><button onclick="toggleLectura('santo-45', 'icon-santo-45')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>😄 45. San Felipe Neri — 26 de mayo</span><span id="icon-santo-45" class="text-xl">▼</span></button><div id="santo-45" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Sacerdote romano conocido como el "Santo de la Alegría". Conquistaba a los jóvenes y romanos con su buen humor y santidad contagiosa.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa ines virgen martir cordero"><button onclick="toggleLectura('santo-46', 'icon-santo-46')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🐑 46. Santa Inés de Roma — 21 de enero</span><span id="icon-santo-46" class="text-xl">▼</span></button><div id="santo-46" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Joven de 12 años que prefirió el martirio antes que renegar de su consagración a Cristo. Su símbolo es un cordero blanco.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan vianney cura ars confesiones"><button onclick="toggleLectura('santo-47', 'icon-santo-47')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>⛪ 47. San Juan María Vianney (Cura de Ars) — 4 de agosto</span><span id="icon-santo-47" class="text-xl">▼</span></button><div id="santo-47" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Humilde párroco francés considerado el patrono universal de todos los sacerdotes y curas párrocos del mundo por sus horas interminables en el confesionario.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa filomena martir joven"><button onclick="toggleLectura('santo-48', 'icon-santo-48')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>⭐ 48. Santa Filomena — 11 de agosto</span><span id="icon-santo-48" class="text-xl">▼</span></button><div id="santo-48" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Joven virgen y mártir cuyos restos milagrosos fueron descubiertos en las catacumbas de Roma, muy venerada por grandes santos.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san damian de molokai leprosos"><button onclick="toggleLectura('santo-49', 'icon-santo-49')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>🏝️ 49. San Damián de Molokai — 10 de mayo</span><span id="icon-santo-49" class="text-xl">▼</span></button><div id="santo-49" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Sacerdote belga que entregó su vida cuidando con amor a los leprosos desterrados en la isla de Molokai, contagiándose él mismo de la enfermedad.</p></div></div>
+                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="beato carlo acutis ciberapostol eucaristia"><button onclick="toggleLectura('santo-50', 'icon-santo-50')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition"><span>💻 50. Beato Carlo Acutis (El Ciberapóstol) — 12 de octubre</span><span id="icon-santo-50" class="text-xl">▼</span></button><div id="santo-50" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed"><p>Joven italiano aficionado a la informática que falleció de leucemia a los 15 años. Utilizó internet y la tecnología para documentar los milagros eucarísticos en todo el mundo. Decía una frase célebre: *"La Eucaristía es mi autopista hacia el cielo"*.</p></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
             <section id="tab-chat" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border max-w-2xl mx-auto">
                     <h2 class="text-xl font-bold text-gray-800 mb-1">💬 Chat y Avisos Comunitarios</h2>
@@ -476,7 +807,7 @@
         let esAdmin = false;
 
         function cambiarTab(tab) {
-            ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'recursos', 'chat'].forEach(t => {
+            ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'recursos', 'santos', 'chat'].forEach(t => {
                 document.getElementById('tab-' + t).classList.add('hidden');
                 document.getElementById('btn-' + t).className = "py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition";
             });
@@ -558,6 +889,22 @@
             }
         }
 
+        // --- BUSCADOR INSTANTÁNEO DE SANTOS ---
+        window.filtrarSantos = function() {
+            let filtro = document.getElementById('buscador-santos').value.toLowerCase();
+            let items = document.querySelectorAll('.item-santo');
+            
+            items.forEach(item => {
+                let textoBusqueda = item.getAttribute('data-nombre') || "";
+                let contenidoVisible = item.innerText.toLowerCase();
+                if (textoBusqueda.includes(filtro) || contenidoVisible.includes(filtro)) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
         // --- FUNCIONES FIREBASE CLOUD ---
         window.agregarMonaguilloCloud = async function() {
             let nombre = document.getElementById('nombre-nuevo-monaguillo').value;
@@ -616,8 +963,6 @@
             let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "registros_asistencia"));
             querySnapshot.forEach((docSnap) => {
                 let data = docSnap.data();
-                
-                // Corrección para evitar que salga [object Object]
                 let detalleTexto = "";
                 if (typeof data.detalle === "string") {
                     detalleTexto = data.detalle;
