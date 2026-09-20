@@ -550,8 +550,19 @@
             let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "registros_asistencia"));
             querySnapshot.forEach((docSnap) => {
                 let data = docSnap.data();
+                
+                // Corrección para evitar que salga [object Object]
+                let detalleTexto = "";
+                if (typeof data.detalle === "string") {
+                    detalleTexto = data.detalle;
+                } else if (typeof data.detalle === "object" && data.detalle !== null) {
+                    detalleTexto = JSON.stringify(data.detalle);
+                } else {
+                    detalleTexto = "Registro actualizado en la nube.";
+                }
+
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-3 font-medium text-gray-800">${data.fecha}</td><td class="p-3 text-sm text-gray-600">${data.detalle}</td>`;
+                tr.innerHTML = `<td class="p-3 font-medium text-gray-800">${data.fecha || 'Sin fecha'}</td><td class="p-3 text-sm text-gray-600">${detalleTexto}</td>`;
                 tbody.appendChild(tr);
             });
         }
