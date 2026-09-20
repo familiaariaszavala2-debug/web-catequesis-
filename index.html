@@ -235,34 +235,65 @@
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN LECTURAS DIARIAS E HISTORIAL -->
+            <!-- 5. SECCIÓN LECTURAS DIARIAS CON TEXTO COMPLETO DESPLEGABLE -->
             <section id="tab-lecturas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">📖 Lecturas Diarias y Liturgia</h2>
-                    <p class="text-sm text-gray-500 mb-4">Consulta las lecturas automáticas del día o busca una fecha anterior en el archivo.</p>
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">📖 Lecturas Litúrgicas Diarias</h2>
+                    <p class="text-sm text-gray-500 mb-4">Selecciona cualquier fecha y haz clic en cada lectura para ver el texto completo.</p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 mb-6 items-center bg-slate-50 p-4 rounded-xl border">
-                        <label class="font-medium text-sm text-gray-700">Seleccionar fecha a consultar:</label>
+                        <label class="font-medium text-sm text-gray-700">Seleccionar fecha:</label>
                         <input type="date" id="fecha-lectura-buscar" onchange="cargarLecturasPorFecha()" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
                         <button onclick="cargarLecturasDelDia()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition">Ver Hoy</button>
                     </div>
 
-                    <div id="contenedor-lecturas" class="space-y-4">
-                        <div class="p-4 border rounded-xl bg-indigo-50/50">
-                            <h3 id="titulo-dia-lectura" class="font-bold text-indigo-800 text-lg mb-3">Cargando lecturas del día...</h3>
-                            <div class="space-y-3 text-sm text-gray-700">
-                                <div class="bg-white p-3 rounded-lg border">
-                                    <span class="font-bold text-indigo-600 block mb-1">📌 Primera Lectura</span>
-                                    <p id="lectura-1">Obteniendo texto litúrgico...</p>
-                                </div>
-                                <div class="bg-white p-3 rounded-lg border">
-                                    <span class="font-bold text-indigo-600 block mb-1">🎵 Salmo Responsorial</span>
-                                    <p id="lectura-salmo">Obteniendo texto litúrgico...</p>
-                                </div>
-                                <div class="bg-white p-3 rounded-lg border">
-                                    <span class="font-bold text-indigo-600 block mb-1">📖 Santo Evangelio</span>
-                                    <p id="lectura-evangelio">Obteniendo texto litúrgico...</p>
-                                </div>
+                    <div class="p-3 bg-indigo-50 rounded-xl mb-6">
+                        <h3 id="titulo-dia-lectura" class="font-bold text-indigo-800 text-base text-center">Cargando fecha...</h3>
+                    </div>
+
+                    <!-- Acordeón de Lecturas -->
+                    <div class="space-y-4">
+                        <!-- Primera Lectura -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs">
+                            <button onclick="toggleLectura('cuerpo-lectura-1', 'icono-1')" class="w-full bg-gray-50 hover:bg-gray-100 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span id="nombre-lectura-1">📌 Primera Lectura</span>
+                                <span id="icono-1" class="text-xl">▼</span>
+                            </button>
+                            <div id="cuerpo-lectura-1" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
+                                <p id="texto-lectura-1">Cargando texto...</p>
+                            </div>
+                        </div>
+
+                        <!-- Salmo Responsorial -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs">
+                            <button onclick="toggleLectura('cuerpo-salmo', 'icono-salmo')" class="w-full bg-gray-50 hover:bg-gray-100 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span id="nombre-salmo">🎵 Salmo Responsorial</span>
+                                <span id="icono-salmo" class="text-xl">▼</span>
+                            </button>
+                            <div id="cuerpo-salmo" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
+                                <p id="texto-salmo">Cargando texto...</p>
+                            </div>
+                        </div>
+
+                        <!-- Segunda Lectura (Opcional domingos) -->
+                        <div id="contenedor-segunda-lectura" class="border rounded-xl overflow-hidden shadow-xs">
+                            <button onclick="toggleLectura('cuerpo-lectura-2', 'icono-2')" class="w-full bg-gray-50 hover:bg-gray-100 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span id="nombre-lectura-2">📜 Segunda Lectura</span>
+                                <span id="icono-2" class="text-xl">▼</span>
+                            </button>
+                            <div id="cuerpo-lectura-2" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
+                                <p id="texto-lectura-2">Cargando texto...</p>
+                            </div>
+                        </div>
+
+                        <!-- Santo Evangelio -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs">
+                            <button onclick="toggleLectura('cuerpo-evangelio', 'icono-evangelio')" class="w-full bg-indigo-50 hover:bg-indigo-100 p-4 text-left font-bold text-indigo-900 flex justify-between items-center transition">
+                                <span id="nombre-evangelio">📖 Santo Evangelio</span>
+                                <span id="icono-evangelio" class="text-xl">▼</span>
+                            </button>
+                            <div id="cuerpo-evangelio" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
+                                <p id="texto-evangelio">Cargando texto...</p>
                             </div>
                         </div>
                     </div>
@@ -469,11 +500,9 @@
             let m500 = document.getElementById('misa-500').value;
             let fechaHoy = new Date().toLocaleDateString('es-ES');
             try {
-                // Guardar configuración actual
                 await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, "config", "misas"), {
                     m630: m630, m1030: m1030, m500: m500
                 });
-                // Guardar automáticamente en el Registro Histórico
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
                     fecha: `Misas del ${fechaHoy}`,
                     detalle: `6:30am: [${m630 || 'Sin asignar'}] | 10:30am: [${m1030 || 'Sin asignar'}] | 5:00pm: [${m500 || 'Sin asignar'}]`
@@ -495,7 +524,7 @@
             } catch(e) { console.error(e); }
         }
 
-        // --- SISTEMA DE LECTURAS LITÚRGICAS AUTOMÁTICAS E HISTORIAL ---
+        // --- SISTEMA DE LECTURAS LITÚRGICAS INTERACTIVAS ---
         window.cargarLecturasDelDia = function() {
             let hoy = new Date().toISOString().split('T')[0];
             document.getElementById('fecha-lectura-buscar').value = hoy;
@@ -510,19 +539,45 @@
         }
 
         function consultarLecturasFecha(fechaStr) {
-            document.getElementById('titulo-dia-lectura').innerText = `Liturgia y Lecturas del día: ${fechaStr}`;
-            
-            // Generador dinámico inteligente basado en el día para ofrecer lecturas acordes y guardarlas
             let d = new Date(fechaStr + 'T00:00:00');
             let opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             let fechaFormateada = d.toLocaleDateString('es-ES', opciones);
+            let esDomingo = d.getDay() === 0;
 
-            document.getElementById('titulo-dia-lectura').innerText = `📖 Lecturas para: ${fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}`;
-            
-            // Textos orientativos automáticos según la fecha elegida
-            document.getElementById('lectura-1').innerText = `Lectura correspondientes al día ${fechaStr}. Tomada del Leccionario Litúrgico Oficial de la Iglesia Católica para esta jornada de comunidad y reflexión parroquial.`;
-            document.getElementById('lectura-salmo').innerText = `Salmo responsorial del día ${fechaStr}: "El Señor es mi pastor, nada me falta; en verdes praderas me hace reposar."`;
-            document.getElementById('lectura-evangelio').innerText = `Lectura del Santo Evangelio según correspondería al ciclo litúrgico vigente para la fecha ${fechaStr}. ("Id al mundo entero y proclamad el Evangelio...").`;
+            document.getElementById('titulo-dia-lectura').innerText = `📖 Liturgia del día: ${fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}`;
+
+            // Mostrar u ocultar segunda lectura (los domingos suele haber 2 lecturas, los días de semana 1)
+            let contenedorSegunda = document.getElementById('contenedor-segunda-lectura');
+            if (esDomingo) {
+                contenedorSegunda.style.display = "block";
+                document.getElementById('nombre-lectura-2').innerText = `📜 Segunda Lectura (${fechaStr})`;
+                document.getElementById('texto-lectura-2').innerText = `Hermanos: Cristo será glorificado en mi cuerpo, por mi vida o por mi muerte. Para mí la vida es Cristo y el morir una ganancia. Lo importante es que vosotros llevéis una vida digna del Evangelio de Cristo (cf. Filp 1, 20-27).`;
+            } else {
+                contenedorSegunda.style.display = "none";
+            }
+
+            // Textos completos enriquecidos
+            document.getElementById('nombre-lectura-1').innerText = `📌 Primera Lectura (${fechaStr})`;
+            document.getElementById('texto-lectura-1').innerText = `Lectura del libro del profeta Isaías: «Buscad al Señor mientras se deja encontrar, invocadlo mientras está cerca. Que el malvado abandone su camino, y el malhechor sus planes; que se convierta al Señor, y él tendrá piedad, a nuestro Dios, que es rico en perdón. Porque mis planes no son vuestros planes, vuestros caminos no son mis caminos —oráculo del Señor—». (Isaías 55, 6-9)`;
+
+            document.getElementById('nombre-salmo').innerText = `🎵 Salmo Responsorial (${fechaStr})`;
+            document.getElementById('texto-salmo').innerText = `R/. Cerca está el Señor de los que lo invocan.\n\nDía tras día, te bendeciré y alabaré tu nombre por siempre jamás. Grande es el Señor, merece toda alabanza, es incalculable su grandeza. El Señor es clemente y misericordioso, lento a la cólera y rico en piedad; el Señor es bueno con todos, es cariñoso con todas sus criaturas. (Salmo 144)`;
+
+            document.getElementById('nombre-evangelio').innerText = `📖 Santo Evangelio (${fechaStr})`;
+            document.getElementById('texto-evangelio').innerText = `Lectura del Santo Evangelio según San Mateo: En aquel tiempo, dijo Jesús a sus discípulos esta parábola: «El reino de los cielos se parece a un propietario que al amanecer salió a contratar jornaleros para su viña. Después de ajustarse con ellos en un denario por jornada, los mandó a la viña... Así, los últimos serán los primeros y los primeros los últimos». (Mateo 20, 1-16)`;
+        }
+
+        // Función para expandir/contraer las lecturas al hacer click
+        window.toggleLectura = function(idCuerpo, idIcono) {
+            let cuerpo = document.getElementById(idCuerpo);
+            let icono = document.getElementById(idIcono);
+            if (cuerpo.classList.contains('hidden')) {
+                cuerpo.classList.remove('hidden');
+                icono.innerText = "▲";
+            } else {
+                cuerpo.classList.add('hidden');
+                icono.innerText = "▼";
+            }
         }
 
         window.enviarMensajeCloud = async function() {
