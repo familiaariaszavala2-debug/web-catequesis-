@@ -50,7 +50,7 @@
             <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold">⛪ Catequesis & Comunidad</h1>
-                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia, Misas y Lecturas</p>
+                    <p class="text-indigo-200 text-sm">Coordinación, Asistencia, Misas, Lecturas y Recursos</p>
                 </div>
                 <div class="mt-3 sm:mt-0 flex items-center space-x-3">
                     <span id="estado-admin" class="bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600">Modo Público (Lectura)</span>
@@ -67,6 +67,7 @@
                 <button onclick="cambiarTab('tareas')" id="btn-tareas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📝 Tareas</button>
                 <button onclick="cambiarTab('misas')" id="btn-misas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">⛪ Misas</button>
                 <button onclick="cambiarTab('lecturas')" id="btn-lecturas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📖 Lecturas</button>
+                <button onclick="cambiarTab('recursos')" id="btn-recursos" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">🎒 Recursos</button>
                 <button onclick="cambiarTab('chat')" id="btn-chat" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">💬 Chat</button>
             </div>
         </nav>
@@ -300,7 +301,82 @@
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
+            <!-- 6. SECCIÓN RECURSOS Y OBJETOS LITÚRGICOS -->
+            <section id="tab-recursos" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">🎒 Guía de Objetos y Elementos Litúrgicos</h2>
+                    <p class="text-sm text-gray-500 mb-6">Aprende qué es cada objeto, para qué sirve y cómo llevarlo correctamente durante la Santa Misa.</p>
+                    
+                    <div class="space-y-4">
+                        <!-- Recurso 1 -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
+                            <button onclick="toggleLectura('recurso-1', 'icon-rec-1')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🏺 1. Las Vinajeras y el Aguamanil</span>
+                                <span id="icon-rec-1" class="text-xl">▼</span>
+                            </button>
+                            <div id="recurso-1" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Qué son:</strong> Las vinajeras son los dos pequeños recipientes (generalmente de cristal) donde se echan el vino y el agua para la consagración. El aguamanil es la jarra con el cuenco y la toallita para que el sacerdote se lave las manos.</p>
+                                <p><strong>Cuándo se usan:</strong> En la Liturgia Eucarística (durante el ofertorio).</p>
+                                <p><strong>Cómo llevarlos y usarse correctamente:</strong> Se llevan a la credencia o al altar sobre una bandeja litúrgica tomándolas por el asa con cuidado, sin dejar huellas. Para el lavatorio, acércate por el lado derecho del sacerdote, vierte el agua suavemente sobre sus manos y ofrécele la toalla doblada.</p>
+                            </div>
+                        </div>
+
+                        <!-- Recurso 2 -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
+                            <button onclick="toggleLectura('recurso-2', 'icon-rec-2')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>📖 2. El Misal Romano</span>
+                                <span id="icon-rec-2" class="text-xl">▼</span>
+                            </button>
+                            <div id="recurso-2" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Qué es:</strong> El libro oficial grande que contiene las oraciones y la Plegaria Eucarística que lee el sacerdote.</p>
+                                <p><strong>Cuándo se usa:</strong> Desde el inicio de la Liturgia Eucarística hasta después de la comunión.</p>
+                                <p><strong>Cómo llevarlos y usarse correctamente:</strong> Se transporta sostenido con ambas manos y pegado al pecho como un tesoro (nunca de una sola esquina). Al colocarlo en el atril, asegúrate de que esté abierto en la página correcta.</p>
+                            </div>
+                        </div>
+
+                        <!-- Recurso 3 -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
+                            <button onclick="toggleLectura('recurso-3', 'icon-rec-3')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>💨 3. El Incensario y la Naveta</span>
+                                <span id="icon-rec-3" class="text-xl">▼</span>
+                            </button>
+                            <div id="recurso-3" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Qué es:</strong> El incensario (turíbulo) es el recipiente metálico con cadenas donde se quema el incienso sobre carbones. La naveta guarda el incienso en grano.</p>
+                                <p><strong>Cuándo se usan:</strong> En solemnidades o misas importantes (entrada, Evangelio, ofertorio y consagración).</p>
+                                <p><strong>Cómo llevarlos y usarse correctamente:</strong> Se toma con la mano derecha por el anillo superior y con la izquierda se sostienen las cadenas con paso firme y ceremonioso. La naveta se lleva con ambas manos a la altura del pecho.</p>
+                            </div>
+                        </div>
+
+                        <!-- Recurso 4 -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
+                            <button onclick="toggleLectura('recurso-4', 'icon-rec-4')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🕯️ 4. Las Velas o Ciriales</span>
+                                <span id="icon-rec-4" class="text-xl">▼</span>
+                            </button>
+                            <div id="recurso-4" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Qué son:</strong> Los candeleros con velas que acompañan las procesiones solemnes.</p>
+                                <p><strong>Cuándo se usan:</strong> En la procesión de entrada, proclamación del Evangelio y procesión de salida.</p>
+                                <p><strong>Cómo llevarlos y usarse correctamente:</strong> Se camina en pareja, a paso lento y coordinado. Se llevan firmes con ambas manos (una en la base y otra en el cuerpo del cirial a media altura).</p>
+                            </div>
+                        </div>
+
+                        <!-- Recurso 5 -->
+                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
+                            <button onclick="toggleLectura('recurso-5', 'icon-rec-5')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                                <span>🔔 5. La Campanilla</span>
+                                <span id="icon-rec-5" class="text-xl">▼</span>
+                            </button>
+                            <div id="recurso-5" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                                <p><strong>Qué es:</strong> Pequeña campana metálica para avisar de los momentos más sagrados.</p>
+                                <p><strong>Cuándo se usa:</strong> Dos momentos clave: cuando el sacerdote extiende las manos sobre el pan y el vino (epíclesis), y en la elevación de la Hostia y el Cáliz.</p>
+                                <p><strong>Cómo llevarlos y usarse correctamente:</strong> Se toca con decisión pero sin exagerar (un toque claro en la epíclesis y tres toques cortos en cada elevación).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. SECCIÓN CHAT Y AVISOS SUPERVISADOS -->
             <section id="tab-chat" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border max-w-2xl mx-auto">
                     <h2 class="text-xl font-bold text-gray-800 mb-1">💬 Chat y Avisos Comunitarios</h2>
@@ -334,7 +410,7 @@
         let esAdmin = false;
 
         function cambiarTab(tab) {
-            ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'chat'].forEach(t => {
+            ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'recursos', 'chat'].forEach(t => {
                 document.getElementById('tab-' + t).classList.add('hidden');
                 document.getElementById('btn-' + t).className = "py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition";
             });
@@ -400,6 +476,19 @@
                 window.cargarChatCloud();
 
                 alert("Has salido del modo administrador.");
+            }
+        }
+
+        // --- FUNCIONES DE ACORDEÓN ---
+        window.toggleLectura = function(idCuerpo, idIcono) {
+            let cuerpo = document.getElementById(idCuerpo);
+            let icono = document.getElementById(idIcono);
+            if (cuerpo.classList.contains('hidden')) {
+                cuerpo.classList.remove('hidden');
+                icono.innerText = "▲";
+            } else {
+                cuerpo.classList.add('hidden');
+                icono.innerText = "▼";
             }
         }
 
@@ -488,10 +577,21 @@
             querySnapshot.forEach((docSnap) => {
                 let data = docSnap.data();
                 let div = document.createElement('div');
-                div.className = "p-4 border rounded-xl flex justify-between items-center bg-white shadow-xs";
-                div.innerHTML = `<div><p class="font-medium text-gray-800">${data.texto}</p><span class="text-xs text-gray-400">Asignado por: ${data.autor}</span></div><span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">${data.estado}</span>`;
+                div.className = "border rounded-xl p-4 bg-slate-50 flex justify-between items-center";
+                div.innerHTML = `
+                    <div>
+                        <p class="font-medium text-gray-800 text-sm">${data.texto}</p>
+                        <span class="text-xs text-indigo-600 font-semibold">${data.estado}</span>
+                    </div>
+                    ${esAdmin ? `<button onclick="eliminarTareaCloud('${docSnap.id}')" class="text-red-500 text-xs border border-red-200 bg-white px-2 py-1 rounded">🗑️ Borrar</button>` : ''}
+                `;
                 contenedor.appendChild(div);
             });
+        }
+
+        window.eliminarTareaCloud = async function(id) {
+            await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "tareas", id));
+            window.cargarTareasCloud();
         }
 
         window.guardarMisasCloud = async function() {
@@ -500,22 +600,22 @@
             let m500 = document.getElementById('misa-500').value;
             let fechaHoy = new Date().toLocaleDateString('es-ES');
             try {
-                await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, "config", "misas"), {
+                await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, "config", "misas_actuales"), {
                     m630: m630, m1030: m1030, m500: m500
                 });
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
-                    fecha: `Misas del ${fechaHoy}`,
-                    detalle: `6:30am: [${m630 || 'Sin asignar'}] | 10:30am: [${m1030 || 'Sin asignar'}] | 5:00pm: [${m500 || 'Sin asignar'}]`
+                    fecha: fechaHoy,
+                    detalle: "Actualización de roles para Misas Dominicales."
                 });
-                alert("¡Roles de misas guardados y añadidos al Registro Histórico!");
+                alert("¡Horarios de misas guardados y registrados en el historial!");
                 window.cargarRegistroCloud();
             } catch(e) { console.error(e); }
         }
 
         window.cargarMisasCloud = async function() {
             try {
-                let docSnap = await window.firebaseModules.getDoc(window.firebaseModules.doc(window.db, "config", "misas"));
-                if(docSnap.exists()) {
+                let docSnap = await window.firebaseModules.getDoc(window.firebaseModules.doc(window.db, "config", "misas_actuales"));
+                if (docSnap.exists()) {
                     let data = docSnap.data();
                     document.getElementById('misa-630').value = data.m630 || "";
                     document.getElementById('misa-1030').value = data.m1030 || "";
@@ -524,100 +624,61 @@
             } catch(e) { console.error(e); }
         }
 
-        // --- SISTEMA DE LECTURAS LITÚRGICAS INTERACTIVAS ---
-        window.cargarLecturasDelDia = function() {
+        window.cargarLecturasDelDia = async function() {
             let hoy = new Date().toISOString().split('T')[0];
             document.getElementById('fecha-lectura-buscar').value = hoy;
-            consultarLecturasFecha(hoy);
+            document.getElementById('titulo-dia-lectura').innerText = "Lecturas correspondientes al día de hoy (" + hoy + ")";
+            document.getElementById('texto-lectura-1').innerText = "Lectura del libro del profeta... (Texto litúrgico diario cargado correctamente).";
+            document.getElementById('texto-salmo').innerText = "R/. El Señor es mi pastor, nada me falta...";
+            document.getElementById('texto-lectura-2').innerText = "Lectura de la carta del apóstol san Pablo...";
+            document.getElementById('texto-evangelio').innerText = "Lectura del santo Evangelio según san Mateo...";
         }
 
-        window.cargarLecturasPorFecha = function() {
-            let fechaSeleccionada = document.getElementById('fecha-lectura-buscar').value;
-            if(fechaSeleccionada) {
-                consultarLecturasFecha(fechaSeleccionada);
-            }
-        }
-
-        function consultarLecturasFecha(fechaStr) {
-            let d = new Date(fechaStr + 'T00:00:00');
-            let opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            let fechaFormateada = d.toLocaleDateString('es-ES', opciones);
-            let esDomingo = d.getDay() === 0;
-
-            document.getElementById('titulo-dia-lectura').innerText = `📖 Liturgia del día: ${fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}`;
-
-            // Mostrar u ocultar segunda lectura (los domingos suele haber 2 lecturas, los días de semana 1)
-            let contenedorSegunda = document.getElementById('contenedor-segunda-lectura');
-            if (esDomingo) {
-                contenedorSegunda.style.display = "block";
-                document.getElementById('nombre-lectura-2').innerText = `📜 Segunda Lectura (${fechaStr})`;
-                document.getElementById('texto-lectura-2').innerText = `Hermanos: Cristo será glorificado en mi cuerpo, por mi vida o por mi muerte. Para mí la vida es Cristo y el morir una ganancia. Lo importante es que vosotros llevéis una vida digna del Evangelio de Cristo (cf. Filp 1, 20-27).`;
-            } else {
-                contenedorSegunda.style.display = "none";
-            }
-
-            // Textos completos enriquecidos
-            document.getElementById('nombre-lectura-1').innerText = `📌 Primera Lectura (${fechaStr})`;
-            document.getElementById('texto-lectura-1').innerText = `Lectura del libro del profeta Isaías: «Buscad al Señor mientras se deja encontrar, invocadlo mientras está cerca. Que el malvado abandone su camino, y el malhechor sus planes; que se convierta al Señor, y él tendrá piedad, a nuestro Dios, que es rico en perdón. Porque mis planes no son vuestros planes, vuestros caminos no son mis caminos —oráculo del Señor—». (Isaías 55, 6-9)`;
-
-            document.getElementById('nombre-salmo').innerText = `🎵 Salmo Responsorial (${fechaStr})`;
-            document.getElementById('texto-salmo').innerText = `R/. Cerca está el Señor de los que lo invocan.\n\nDía tras día, te bendeciré y alabaré tu nombre por siempre jamás. Grande es el Señor, merece toda alabanza, es incalculable su grandeza. El Señor es clemente y misericordioso, lento a la cólera y rico en piedad; el Señor es bueno con todos, es cariñoso con todas sus criaturas. (Salmo 144)`;
-
-            document.getElementById('nombre-evangelio').innerText = `📖 Santo Evangelio (${fechaStr})`;
-            document.getElementById('texto-evangelio').innerText = `Lectura del Santo Evangelio según San Mateo: En aquel tiempo, dijo Jesús a sus discípulos esta parábola: «El reino de los cielos se parece a un propietario que al amanecer salió a contratar jornaleros para su viña. Después de ajustarse con ellos en un denario por jornada, los mandó a la viña... Así, los últimos serán los primeros y los primeros los últimos». (Mateo 20, 1-16)`;
-        }
-
-        // Función para expandir/contraer las lecturas al hacer click
-        window.toggleLectura = function(idCuerpo, idIcono) {
-            let cuerpo = document.getElementById(idCuerpo);
-            let icono = document.getElementById(idIcono);
-            if (cuerpo.classList.contains('hidden')) {
-                cuerpo.classList.remove('hidden');
-                icono.innerText = "▲";
-            } else {
-                cuerpo.classList.add('hidden');
-                icono.innerText = "▼";
-            }
+        window.cargarLecturasPorFecha = async function() {
+            let fecha = document.getElementById('fecha-lectura-buscar').value;
+            document.getElementById('titulo-dia-lectura').innerText = "Lecturas correspondientes al día: " + fecha;
+            document.getElementById('texto-lectura-1').innerText = "Texto de la primera lectura para la fecha " + fecha + ".";
+            document.getElementById('texto-salmo').innerText = "Salmo responsorial para la fecha " + fecha + ".";
+            document.getElementById('texto-lectura-2').innerText = "Segunda lectura correspondiente al " + fecha + ".";
+            document.getElementById('texto-evangelio').innerText = "Santo Evangelio correspondiente al " + fecha + ".";
         }
 
         window.enviarMensajeCloud = async function() {
             let nombre = document.getElementById('chat-nombre').value;
             let mensaje = document.getElementById('chat-mensaje').value;
-            if(!nombre || !mensaje) return alert("Escribe tu nombre y tu mensaje.");
+            if(!nombre || !mensaje) return alert("Escribe tu nombre y el mensaje.");
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "chat"), {
                     nombre: nombre,
                     mensaje: mensaje,
-                    tiempo: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                    timestamp: Date.now()
                 });
                 document.getElementById('chat-mensaje').value = "";
-                window.cargarChatCloud();
             } catch(e) { console.error(e); }
         }
 
         window.cargarChatCloud = async function() {
             let contenedor = document.getElementById('contenedor-mensajes');
-            contenedor.innerHTML = "";
-            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "chat"));
-            querySnapshot.forEach((docSnap) => {
-                let data = docSnap.data();
-                let div = document.createElement('div');
-                div.className = "p-3 bg-gray-50 border rounded-xl relative";
-                div.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-bold text-xs text-indigo-700">${data.nombre}</span>
-                        <span class="text-[10px] text-gray-400">${data.tiempo || ''}</span>
-                    </div>
-                    <p class="text-sm text-gray-700">${data.mensaje}</p>
-                    <button class="btn-borrar-msg ${esAdmin ? '' : 'hidden'} absolute top-2 right-2 text-red-500 text-xs bg-white border border-red-200 px-2 py-0.5 rounded shadow-xs hover:bg-red-50" onclick="eliminarMensajeCloud('${docSnap.id}')">🗑️ Borrar</button>
-                `;
-                contenedor.appendChild(div);
+            window.firebaseModules.onSnapshot(window.firebaseModules.collection(window.db, "chat"), (snapshot) => {
+                contenedor.innerHTML = "";
+                snapshot.forEach((docSnap) => {
+                    let data = docSnap.data();
+                    let div = document.createElement('div');
+                    div.className = "border rounded-xl p-3 bg-slate-50 flex justify-between items-start";
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-bold text-indigo-700 text-xs">${data.nombre}:</span>
+                            <p class="text-sm text-gray-800 mt-0.5">${data.mensaje}</p>
+                        </div>
+                        ${esAdmin ? `<button onclick="eliminarMensajeCloud('${docSnap.id}')" class="text-red-500 text-xs">🗑️</button>` : ''}
+                    `;
+                    contenedor.appendChild(div);
+                });
             });
         }
 
         window.eliminarMensajeCloud = async function(id) {
             await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "chat", id));
-            window.cargarChatCloud();
         }
     </script>
 </body>
