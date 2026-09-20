@@ -96,9 +96,9 @@
                                 </thead>
                                 <tbody class="divide-y">
                                     <tr>
-                                        <td class="p-3 font-medium text-gray-800">Carolina</td>
+                                        <td class="p-3 font-medium text-gray-800 nombre-catequista">Carolina</td>
                                         <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                            <select class="select-asistencia select-catequista border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
                                                 <option value="Presente">Presente</option>
                                                 <option value="Ausente">Ausente</option>
                                                 <option value="Justificado">Justificado</option>
@@ -106,9 +106,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="p-3 font-medium text-gray-800">Flor</td>
+                                        <td class="p-3 font-medium text-gray-800 nombre-catequista">Flor</td>
                                         <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                            <select class="select-asistencia select-catequista border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
                                                 <option value="Presente">Presente</option>
                                                 <option value="Ausente">Ausente</option>
                                                 <option value="Justificado">Justificado</option>
@@ -116,9 +116,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="p-3 font-medium text-gray-800">María Elena</td>
+                                        <td class="p-3 font-medium text-gray-800 nombre-catequista">María Elena</td>
                                         <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
+                                            <select class="select-asistencia select-catequista border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
                                                 <option value="Presente">Presente</option>
                                                 <option value="Ausente">Ausente</option>
                                                 <option value="Justificado">Justificado</option>
@@ -162,14 +162,15 @@
             <section id="tab-registro" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Registro Histórico de Asistencia</h2>
-                    <p class="text-sm text-gray-500 mb-6">Historial guardado permanentemente en la nube.</p>
+                    <p class="text-sm text-gray-500 mb-6">Historial guardado permanentemente en la nube con detalles completos.</p>
                     
                     <div class="overflow-x-auto border rounded-xl">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-600 text-sm">
                                     <th class="p-3">Fecha</th>
-                                    <th class="p-3">Detalle</th>
+                                    <th class="p-3">Resumen</th>
+                                    <th class="p-3 text-center">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-registro-body" class="divide-y">
@@ -254,6 +255,22 @@
             </section>
 
         </main>
+    </div>
+
+    <!-- MODAL PARA VER DETALLES DE ASISTENCIA -->
+    <div id="modal-detalles" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="modal-titulo" class="font-bold text-lg text-indigo-700">Detalles de Asistencia</h3>
+                <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">&times;</button>
+            </div>
+            <div id="modal-contenido" class="space-y-2 max-h-60 overflow-y-auto text-sm text-gray-700">
+                <!-- Se inyecta la lista de asistencias -->
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="cerrarModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition">Cerrar</button>
+            </div>
+        </div>
     </div>
 
     <!-- Footer personalizado -->
@@ -355,9 +372,9 @@
                 let data = docSnap.data();
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-gray-800">${data.nombre}</td>
+                    <td class="p-3 font-medium text-gray-800 nombre-monaguillo">${data.nombre}</td>
                     <td class="p-3 text-center">
-                        <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
+                        <select class="select-asistencia select-monaguillo border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
                             <option value="Presente">Presente</option>
                             <option value="Ausente">Ausente</option>
                             <option value="Justificado">Justificado</option>
@@ -378,10 +395,26 @@
 
         window.guardarAsistenciaCloud = async function() {
             let fecha = document.getElementById('fecha-asistencia').value || new Date().toLocaleDateString('es-ES');
+            
+            // Recopilar datos de catequistas
+            let listaAsistencia = [];
+            let catequistasNombres = document.querySelectorAll('.nombre-catequista');
+            let catequistasSelects = document.querySelectorAll('.select-catequista');
+            catequistasNombres.forEach((el, index) => {
+                listaAsistencia.push({ nombre: el.innerText, rol: "Catequista", estado: catequistasSelects[index].value });
+            });
+
+            // Recopilar datos de monaguillos
+            let monaguillosNombres = document.querySelectorAll('.nombre-monaguillo');
+            let monaguillosSelects = document.querySelectorAll('.select-monaguillo');
+            monaguillosNombres.forEach((el, index) => {
+                listaAsistencia.push({ nombre: el.innerText, rol: "Monaguillo", estado: monaguillosSelects[index].value });
+            });
+
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
                     fecha: fecha,
-                    detalle: "Asistencia guardada correctamente por administración."
+                    detalle: listaAsistencia
                 });
                 alert("¡Asistencia guardada en la nube con éxito!");
                 window.cargarRegistroCloud();
@@ -395,9 +428,44 @@
             querySnapshot.forEach((docSnap) => {
                 let data = docSnap.data();
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-3 font-medium text-gray-800">${data.fecha}</td><td class="p-3 text-sm text-gray-600">${data.detalle}</td>`;
+                
+                // Generar resumen rápido
+                let totalPresentes = data.detalle ? data.detalle.filter(d => d.estado === 'Presente').length : 0;
+                let totalAsistentes = data.detalle ? data.detalle.length : 0;
+
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-gray-800">${data.fecha}</td>
+                    <td class="p-3 text-sm text-gray-600">${totalPresentes} de ${totalAsistentes} presentes</td>
+                    <td class="p-3 text-center">
+                        <button onclick='verDetallesAsistencia(${JSON.stringify(data)})' class="text-indigo-600 hover:text-indigo-800 text-sm font-medium bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-100 transition">Ver detalles</button>
+                    </td>
+                `;
                 tbody.appendChild(tr);
             });
+        }
+
+        window.verDetallesAsistencia = function(data) {
+            document.getElementById('modal-titulo').innerText = "Asistencia del día: " + data.fecha;
+            let contenedor = document.getElementById('modal-contenido');
+            contenedor.innerHTML = "";
+
+            if(data.detalle && Array.isArray(data.detalle)) {
+                data.detalle.forEach(item => {
+                    let colorEstado = item.estado === 'Presente' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : (item.estado === 'Ausente' ? 'text-red-600 bg-red-50 border-red-200' : 'text-amber-600 bg-amber-50 border-amber-200');
+                    let div = document.createElement('div');
+                    div.className = "flex justify-between items-center p-2 rounded border bg-slate-50";
+                    div.innerHTML = `<span><strong>${item.nombre}</strong> <span class="text-xs text-gray-400">(${item.rol})</span></span><span class="text-xs px-2 py-0.5 rounded border font-medium ${colorEstado}">${item.estado}</span>`;
+                    contenedor.appendChild(div);
+                });
+            } else {
+                contenedor.innerHTML = "<p class='text-gray-500'>No hay detalles detallados guardados en este registro antiguo.</p>";
+            }
+
+            document.getElementById('modal-detalles').classList.remove('hidden');
+        }
+
+        window.cerrarModal = function() {
+            document.getElementById('modal-detalles').classList.add('hidden');
         }
 
         window.agregarTareaCloud = async function() {
