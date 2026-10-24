@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catequesis - Control, Misas y Comunidad</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs y Configuración -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Tus credenciales reales de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCOzM0d5tCvpiEfdV8Y0Ux-7exhLsDjMCs",
             authDomain: "web-catequesis.firebaseapp.com",
@@ -26,10 +23,10 @@
 
         window.db = db;
         window.firebaseModules = { collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, query, orderBy, onSnapshot };
-        
+
         window.inicializarDatosCloud = function() {
             setTimeout(() => {
-                if(!window.db) return;
+                if (!window.db) return;
                 window.cargarMonaguillosCloud();
                 window.cargarRegistroCloud();
                 window.cargarTareasCloud();
@@ -43,15 +40,12 @@
 </head>
 <body class="bg-slate-50 min-h-screen font-sans flex flex-col justify-between">
 
-    <!-- MODAL DE INICIO DE SESIÓN (SOLO NOMBRE) -->
-    <div id="modal-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <!-- MODAL LOGIN -->
+    <div id="modal-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center space-y-4 border">
-            <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl">
-                ⛪
-            </div>
+            <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl">⛪</div>
             <h2 class="text-2xl font-bold text-gray-800">¡Bienvenido a Catequesis!</h2>
             <p class="text-sm text-gray-500">Por favor, introduce tu nombre para ingresar a la plataforma parroquial.</p>
-            
             <div class="space-y-3 pt-2">
                 <input type="text" id="input-nombre-usuario" placeholder="Ej. Carolina, Monaguillo Juan..." class="w-full border rounded-xl px-4 py-3 text-center text-base focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 font-medium">
                 <button onclick="guardarSesionUsuario()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl transition shadow-sm">Entrar a la Plataforma</button>
@@ -60,8 +54,20 @@
         </div>
     </div>
 
+    <!-- MODAL CONTRASEÑA ADMIN -->
+    <div id="modal-admin" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center space-y-4 border">
+            <h2 class="text-xl font-bold text-gray-800">🔑 Acceso Catequistas</h2>
+            <input type="password" id="input-password-admin" placeholder="Contraseña de administrador" onkeydown="if (event.key === 'Enter') confirmarAdmin()" class="w-full border rounded-xl px-4 py-3 text-center text-base focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50">
+            <p id="error-password-admin" class="hidden text-sm text-red-600 font-medium">Contraseña incorrecta.</p>
+            <div class="flex gap-2">
+                <button onclick="cerrarModalAdmin()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 rounded-xl transition">Cancelar</button>
+                <button onclick="confirmarAdmin()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-xl transition">Entrar</button>
+            </div>
+        </div>
+    </div>
+
     <div>
-        <!-- Header -->
         <header class="bg-indigo-700 text-white shadow-md">
             <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
                 <div>
@@ -75,82 +81,42 @@
             </div>
         </header>
 
-        <!-- Navegación por pestañas -->
         <nav class="bg-white shadow-sm border-b sticky top-0 z-10">
-            <div class="max-w-6xl mx-auto flex justify-start sm:justify-center space-x-1 sm:space-x-4 px-4 overflow-x-auto">
-                <button onclick="cambiarTab('asistencia')" id="btn-asistencia" class="py-3 px-3 sm:px-4 font-medium text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap focus:outline-none transition">📅 Asistencia</button>
-                <button onclick="cambiarTab('registro')" id="btn-registro" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📋 Registro</button>
-                <button onclick="cambiarTab('tareas')" id="btn-tareas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📝 Tareas</button>
-                <button onclick="cambiarTab('misas')" id="btn-misas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">⛪ Misas</button>
-                <button onclick="cambiarTab('lecturas')" id="btn-lecturas" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">📖 Lecturas</button>
-                <button onclick="cambiarTab('recursos')" id="btn-recursos" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">🎒 Recursos</button>
-                <button onclick="cambiarTab('santos')" id="btn-santos" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">✝️ Santos</button>
-                <button onclick="cambiarTab('chat')" id="btn-chat" class="py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition">💬 Chat</button>
+            <div id="barra-tabs" class="max-w-6xl mx-auto flex justify-start sm:justify-center space-x-1 sm:space-x-4 px-4 overflow-x-auto">
+                <button onclick="cambiarTab('asistencia')" id="btn-asistencia">📅 Asistencia</button>
+                <button onclick="cambiarTab('registro')" id="btn-registro">📋 Registro</button>
+                <button onclick="cambiarTab('tareas')" id="btn-tareas">📝 Tareas</button>
+                <button onclick="cambiarTab('misas')" id="btn-misas">⛪ Misas</button>
+                <button onclick="cambiarTab('lecturas')" id="btn-lecturas">📖 Lecturas</button>
+                <button onclick="cambiarTab('recursos')" id="btn-recursos">🎒 Recursos</button>
+                <button onclick="cambiarTab('santos')" id="btn-santos">✝️ Santos</button>
+                <button onclick="cambiarTab('chat')" id="btn-chat">💬 Chat</button>
             </div>
         </nav>
 
-        <!-- Contenido Principal -->
         <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
 
-            <!-- 1. SECCIÓN ASISTENCIA -->
+            <!-- 1. ASISTENCIA -->
             <section id="tab-asistencia" class="space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Control de Asistencia</h2>
                     <p class="text-sm text-gray-500 mb-6">Registro para Catequistas y Monaguillos sincronizado en la nube.</p>
-                    
+
                     <div class="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
                         <input type="date" id="fecha-asistencia" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none w-full sm:w-auto">
                         <button onclick="guardarAsistenciaCloud()" id="btn-guardar-asistencia" class="bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto" disabled>🔒 Guardar Asistencia (Requiere Admin)</button>
                     </div>
 
-                    <!-- Tabla Catequistas -->
                     <div class="mb-8">
                         <h3 class="font-bold text-indigo-700 text-base mb-3">👩‍🏫 Catequistas</h3>
                         <div class="overflow-x-auto border rounded-xl">
                             <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100 text-gray-600 text-sm">
-                                        <th class="p-3">Nombre</th>
-                                        <th class="p-3 text-center">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y">
-                                    <tr>
-                                        <td class="p-3 font-medium text-gray-800">Carolina</td>
-                                        <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Justificado">Justificado</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-3 font-medium text-gray-800">Flor</td>
-                                        <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Justificado">Justificado</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-3 font-medium text-gray-800">María Elena</td>
-                                        <td class="p-3 text-center">
-                                            <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" disabled>
-                                                <option value="Presente">Presente</option>
-                                                <option value="Ausente">Ausente</option>
-                                                <option value="Justificado">Justificado</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <thead><tr class="bg-gray-100 text-gray-600 text-sm"><th class="p-3">Nombre</th><th class="p-3 text-center">Estado</th></tr></thead>
+                                <tbody id="tabla-catequistas-body" class="divide-y"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Tabla Monaguillos -->
                     <div>
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-indigo-700 text-base">👦👧 Monaguillos</h3>
@@ -168,44 +134,32 @@
                                         <th class="p-3 text-center col-accion-admin hidden">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tabla-monaguillos-body" class="divide-y">
-                                    <!-- Se cargan dinámicamente de Firebase -->
-                                </tbody>
+                                <tbody id="tabla-monaguillos-body" class="divide-y"></tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
             </section>
 
-            <!-- 2. SECCIÓN REGISTRO HISTÓRICO -->
+            <!-- 2. REGISTRO -->
             <section id="tab-registro" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Registro Histórico General</h2>
                     <p class="text-sm text-gray-500 mb-6">Historial automático de asistencias y roles de misas guardados en la nube.</p>
-                    
                     <div class="overflow-x-auto border rounded-xl">
                         <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-600 text-sm">
-                                    <th class="p-3">Fecha / Evento</th>
-                                    <th class="p-3">Detalle del Registro</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabla-registro-body" class="divide-y">
-                                <!-- Se cargan dinámicamente de Firebase -->
-                            </tbody>
+                            <thead><tr class="bg-gray-100 text-gray-600 text-sm"><th class="p-3">Fecha / Evento</th><th class="p-3">Detalle del Registro</th></tr></thead>
+                            <tbody id="tabla-registro-body" class="divide-y"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. SECCIÓN TAREAS -->
+            <!-- 3. TAREAS -->
             <section id="tab-tareas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Asignación de Tareas</h2>
                     <p class="text-sm text-gray-500 mb-4">Organización de pendientes en tiempo real.</p>
-
                     <div id="panel-crear-tarea" class="bg-slate-50 p-4 rounded-xl border mb-6 hidden">
                         <h3 class="font-bold text-indigo-700 text-sm mb-3">➕ Asignar Nueva Tarea (Modo Admin)</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -213,752 +167,78 @@
                             <button onclick="agregarTareaCloud()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition">Publicar Tarea</button>
                         </div>
                     </div>
-
-                    <div id="contenedor-tareas" class="space-y-3">
-                        <!-- Se cargan dinámicamente de Firebase -->
-                    </div>
+                    <div id="contenedor-tareas" class="space-y-3"></div>
                 </div>
             </section>
 
-            <!-- 4. SECCIÓN MISAS Y MONAGUILLOS -->
+            <!-- 4. MISAS -->
             <section id="tab-misas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">Roles para Misas Dominicales</h2>
                     <p class="text-sm text-gray-500 mb-6">Programación para 6:30 a. m., 10:30 a. m. y 5:00 p. m. Al guardar, se registrará automáticamente en el Historial.</p>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-indigo-700 text-lg mb-2">🌅 6:30 a. m.</h3>
-                                <textarea id="misa-630" placeholder="Ej: Carolina y Juan..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
-                            </div>
+                        <div class="border rounded-xl p-4 bg-slate-50">
+                            <h3 class="font-bold text-indigo-700 text-lg mb-2">🌅 6:30 a. m.</h3>
+                            <textarea id="misa-630" placeholder="Ej: Carolina y Juan..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
                         </div>
-                        <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-indigo-700 text-lg mb-2">☀️ 10:30 a. m.</h3>
-                                <textarea id="misa-1030" placeholder="Ej: Flor y Pedro..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
-                            </div>
+                        <div class="border rounded-xl p-4 bg-slate-50">
+                            <h3 class="font-bold text-indigo-700 text-lg mb-2">☀️ 10:30 a. m.</h3>
+                            <textarea id="misa-1030" placeholder="Ej: Flor y Pedro..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
                         </div>
-                        <div class="border rounded-xl p-4 bg-slate-50 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-indigo-700 text-lg mb-2">🌙 5:00 p. m.</h3>
-                                <textarea id="misa-500" placeholder="Ej: María Elena y Sofía..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
-                            </div>
+                        <div class="border rounded-xl p-4 bg-slate-50">
+                            <h3 class="font-bold text-indigo-700 text-lg mb-2">🌙 5:00 p. m.</h3>
+                            <textarea id="misa-500" placeholder="Ej: María Elena y Sofía..." class="w-full border rounded-lg p-2 text-sm bg-white h-32 mt-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100" disabled></textarea>
                         </div>
                     </div>
-
                     <div class="mt-6 flex justify-end">
                         <button onclick="guardarMisasCloud()" id="btn-guardar-misas" class="bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed" disabled>🔒 Guardar Horarios (Requiere Admin)</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 5. SECCIÓN LECTURAS DIARIAS -->
+            <!-- 5. LECTURAS -->
             <section id="tab-lecturas" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">📖 Lecturas Litúrgicas Diarias</h2>
                     <p class="text-sm text-gray-500 mb-4">Selecciona cualquier fecha y haz clic en cada lectura para ver el texto completo.</p>
-                    
                     <div class="flex flex-col sm:flex-row gap-4 mb-6 items-center bg-slate-50 p-4 rounded-xl border">
                         <label class="font-medium text-sm text-gray-700">Seleccionar fecha:</label>
                         <input type="date" id="fecha-lectura-buscar" onchange="cargarLecturasPorFecha()" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
                         <button onclick="cargarLecturasDelDia()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition">Ver Hoy</button>
                     </div>
-
                     <div class="p-3 bg-indigo-50 rounded-xl mb-6">
                         <h3 id="titulo-dia-lectura" class="font-bold text-indigo-800 text-base text-center">Cargando fecha...</h3>
                     </div>
-
-                    <!-- Acordeón de Lecturas -->
-                    <div class="space-y-4">
-                        <div class="border rounded-xl overflow-hidden shadow-xs">
-                            <button onclick="toggleLectura('cuerpo-lectura-1', 'icono-1')" class="w-full bg-gray-50 hover:bg-gray-100 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span id="nombre-lectura-1">📌 Primera Lectura</span>
-                                <span id="icono-1" class="text-xl">▼</span>
-                            </button>
-                            <div id="cuerpo-lectura-1" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
-                                <p id="texto-lectura-1">Cargando texto...</p>
-                            </div>
-                        </div>
-
-                        <div class="border rounded-xl overflow-hidden shadow-xs">
-                            <button onclick="toggleLectura('cuerpo-salmo', 'icono-salmo')" class="w-full bg-gray-50 hover:bg-gray-100 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span id="nombre-salmo">🎵 Salmo Responsorial</span>
-                                <span id="icono-salmo" class="text-xl">▼</span>
-                            </button>
-                            <div id="cuerpo-salmo" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
-                                <p id="texto-salmo">Cargando texto...</p>
-                            </div>
-                        </div>
-
-                        <div id="contenedor-segunda-lectura" class="border rounded-xl overflow-hidden shadow-xs">
-                            <button onclick="toggleLectura('cuerpo-lectura-2', 'icono-2')" class="w-full bg-gray-50 hover:bg-gray-100 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span id="nombre-lectura-2">📜 Segunda Lectura</span>
-                                <span id="icono-2" class="text-xl">▼</span>
-                            </button>
-                            <div id="cuerpo-lectura-2" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
-                                <p id="texto-lectura-2">Cargando texto...</p>
-                            </div>
-                        </div>
-
-                        <div class="border rounded-xl overflow-hidden shadow-xs">
-                            <button onclick="toggleLectura('cuerpo-evangelio', 'icono-evangelio')" class="w-full bg-indigo-50 hover:bg-indigo-100 p-4 text-left font-bold text-indigo-900 flex justify-between items-center transition">
-                                <span id="nombre-evangelio">📖 Santo Evangelio</span>
-                                <span id="icono-evangelio" class="text-xl">▼</span>
-                            </button>
-                            <div id="cuerpo-evangelio" class="hidden p-4 bg-white border-t text-sm text-gray-700 space-y-2 leading-relaxed">
-                                <p id="texto-evangelio">Cargando texto...</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="acordeon-lecturas" class="space-y-4"></div>
                 </div>
             </section>
 
-            <!-- 6. SECCIÓN RECURSOS Y OBJETOS LITÚRGICOS -->
+            <!-- 6. RECURSOS -->
             <section id="tab-recursos" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">🎒 Guía de Objetos y Elementos Litúrgicos</h2>
                     <p class="text-sm text-gray-500 mb-6">Aprende qué es cada objeto, para qué sirve y cómo llevarlo correctamente durante la Santa Misa.</p>
-                    
-                    <div class="space-y-4">
-                        <!-- 1. Las Vinajeras y el Aguamanil -->
-                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                            <button onclick="toggleLectura('recurso-1', 'icon-rec-1')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🏺 1. Las Vinajeras y el Aguamanil</span>
-                                <span id="icon-rec-1" class="text-xl">▼</span>
-                            </button>
-                            <div id="recurso-1" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué son:</strong> Son los pequeños recipientes (ampolletas) para el vino y el agua, acompañados de la jarra y el cuenco (aguamanil) para el lavatorio de manos.</p>
-                                <p><strong>Para qué sirven:</strong> Las vinajeras contienen los elementos que se convertirán en el Cuerpo y la Sangre de Cristo. El aguamanil sirve para que el sacerdote se purifique las manos antes de la Plegaria Eucarística.</p>
-                                <p><strong>Cómo llevarlos:</strong> Se transportan con cuidado y respeto (idealmente tomándolos por la base o el asa) hacia el altar en el momento del ofertorio. El monaguillo del aguamanil lleva la jarra en una mano y la toalla doblada en el otro brazo de forma pulcra.</p>
-                            </div>
-                        </div>
-
-                        <!-- 2. El Misal Romano -->
-                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                            <button onclick="toggleLectura('recurso-2', 'icon-rec-2')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>📖 2. El Misal Romano</span>
-                                <span id="icon-rec-2" class="text-xl">▼</span>
-                            </button>
-                            <div id="recurso-2" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué es:</strong> Es el libro litúrgico oficial que contiene todas las oraciones, la gran Plegaria Eucarística y las directrices para celebrar la Santa Misa.</p>
-                                <p><strong>Para qué sirve:</strong> Guía paso a paso al sacerdote en la celebración eucarística de cada día del año litúrgico.</p>
-                                <p><strong>Cómo llevarlo/sostenerlo:</strong> Se transporta abrazándolo con ambas manos a la altura del pecho con reverencia. Al sostenerlo para que el sacerdote lea, se debe abrir firmemente a la altura correcta, procurando no tapar el texto y manteniendo una postura recta y atenta.</p>
-                            </div>
-                        </div>
-
-                        <!-- 3. El Incensario y la Naveta -->
-                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                            <button onclick="toggleLectura('recurso-3', 'icon-rec-3')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>💨 3. El Incensario y la Naveta</span>
-                                <span id="icon-rec-3" class="text-xl">▼</span>
-                            </button>
-                            <div id="recurso-3" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué son:</strong> El incensario (o turíbulo) es el recipiente metálico donde se quema el incienso sobre carbones encendidos. La naveta es el pequeño recipiente con forma de barquito que contiene el incienso en grano junto con su cucharita.</p>
-                                <p><strong>Para qué sirven:</strong> El incienso simboliza la oración de los fieles que asciende hacia Dios y sirve para honrar y venerar el altar, las ofrendas, al sacerdote y a la asamblea.</p>
-                                <p><strong>Cómo llevarlos:</strong> El monaguillo que lleva la naveta camina al lado del turiferario. Se sostiene la naveta con ambas manos a la altura del pecho. Al momento de entregar el incienso al sacerdote, se le acerca la naveta para que pueda tomar las cucharadas y bendecirlo.</p>
-                            </div>
-                        </div>
-
-                        <!-- 4. El Alba y la Sotana -->
-                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                            <button onclick="toggleLectura('recurso-4', 'icon-rec-4')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🧥 4. El Alba y la Sotana (con Sobrepelliz o Roquete)</span>
-                                <span id="icon-rec-4" class="text-xl">▼</span>
-                            </button>
-                            <div id="recurso-4" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué son:</strong> El alba es la túnica blanca larga que usan los ministros y acólitos. La sotana es la túnica oscura (comúnmente negra o roja) que a menudo se complementa encima con el sobrepelliz o roquete (una túnica blanca más corta con mangas anchas).</p>
-                                <p><strong>Para qué sirven:</strong> Representan la pureza del alma que se requiere para servir en el altar y ayudan a mantener la uniformidad y el respeto durante la celebración litúrgica.</p>
-                                <p><strong>Cómo usarlos/llevarlos:</strong> Deben lucir siempre limpios, bien planchados y a la medida exacta (el alba no debe arrastrar en el suelo para evitar tropezar al caminar por el presbiterio).</p>
-                            </div>
-                        </div>
-
-                        <!-- 5. La Credencia -->
-                        <div class="border rounded-xl overflow-hidden shadow-xs bg-slate-50">
-                            <button onclick="toggleLectura('recurso-5', 'icon-rec-5')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🪵 5. La Credencia (La mesita del altar)</span>
-                                <span id="icon-rec-5" class="text-xl">▼</span>
-                            </button>
-                            <div id="recurso-5" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Qué es:</strong> Es la mesa auxiliar que se coloca a un lado del presbiterio, cerca del altar.</p>
-                                <p><strong>Para qué sirve:</strong> En ella se preparan y se colocan ordenadamente todos los objetos litúrgicos antes de ser utilizados en la Misa (las vinajeras con agua y vino, el purificador, el cáliz, la patena, el aguamanil y la toalla).</p>
-                                <p><strong>Cómo utilizarla:</strong> Debe mantenerse ordenada antes, durante y después de la celebración. Los monaguillos son los encargados de llevar lo necesario desde la credencia hacia el altar en el momento litúrgico correspondiente (como en el ofertorio).</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="lista-recursos" class="space-y-4"></div>
                 </div>
             </section>
-            <!-- 7. SECCIÓN HISTORIA DE LOS SANTOS (LISTA AMPLIADA Y COMPLETA) -->
+
+            <!-- 7. SANTOS -->
             <section id="tab-santos" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border">
                     <h2 class="text-xl font-bold text-gray-800 mb-2">✝️ Enciclopedia de Vidas e Historias de los Santos</h2>
                     <p class="text-sm text-gray-500 mb-6">Busca y descubre el testimonio de decenas de santos, mártires y beatos de la Iglesia.</p>
-                    
                     <div class="mb-6">
                         <input type="text" id="buscador-santos" onkeyup="filtrarSantos()" placeholder="🔍 Escribe el nombre de un santo (ej. Tarcisio, Agustín, Catalina, Juan...)" class="w-full border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 font-medium">
                     </div>
-
-                    <div id="lista-santos" class="space-y-3">
-                        <!-- 1. San Tarcisio -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san tarcisio patrono monaguillos nino martir eucaristia">
-                            <button onclick="toggleLectura('santo-1', 'icon-santo-1')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🧒 1. San Tarcisio (Patrono de los Monaguillos) — 15 de agosto</span>
-                                <span id="icon-santo-1" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-1" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Joven acólito del siglo III en Roma. Llevaba la Sagrada Eucaristía a los cristianos encarcelados y prefirió morir apedreado antes que profanar el sacramento.</p>
-                            </div>
-                        </div>
-
-                        <!-- 2. San Agustín -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san agustin de hipona doctor iglesia confesor">
-                            <button onclick="toggleLectura('santo-2', 'icon-santo-2')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>📜 2. San Agustín de Hipona (Doctor de la Iglesia) — 28 de agosto</span>
-                                <span id="icon-santo-2" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-2" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Obispo de Hipona, autor de las Confesiones, convertido tras las oraciones de su madre Santa Mónica.</p>
-                            </div>
-                        </div>
-
-                        <!-- 3. Santa Catalina de Siena -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa catalina de siena doctora iglesia patrona europa">
-                            <button onclick="toggleLectura('santo-3', 'icon-santo-3')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>👑 3. Santa Catalina de Siena (Doctora de la Iglesia) — 29 de abril</span>
-                                <span id="icon-santo-3" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-3" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Mística dominica que aconsejó a papas y gobernantes, patrona de Europa.</p>
-                            </div>
-                        </div>
-
-                        <!-- 4. San Francisco de Asís -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san francisco de asis pobreza animales paz">
-                            <button onclick="toggleLectura('santo-4', 'icon-santo-4')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🌿 4. San Francisco de Asís — 4 de octubre</span>
-                                <span id="icon-santo-4" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-4" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Renunció a sus riquezas para vivir en pobreza evangélica, fundó los franciscanos y amaba profundamente la naturaleza.</p>
-                            </div>
-                        </div>
-
-                        <!-- 5. Santa Teresita del Niño Jesús -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa teresita del nino jesus florecita caminito">
-                            <button onclick="toggleLectura('santo-5', 'icon-santo-5')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🌸 5. Santa Teresita del Niño Jesús (Doctora) — 1 de octubre</span>
-                                <span id="icon-santo-5" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-5" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Monja carmelita del "caminito" espiritual, haciendo las pequeñas cosas con gran amor.</p>
-                            </div>
-                        </div>
-
-                        <!-- 6. San Juan Bosco -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan bosco don bosco jovenes salesianos">
-                            <button onclick="toggleLectura('santo-6', 'icon-santo-6')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🧑‍🏫 6. San Juan Bosco (Don Bosco) — 31 de enero</span>
-                                <span id="icon-santo-6" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-6" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Padre y maestro de la juventud, fundador de los salesianos en Turín.</p>
-                            </div>
-                        </div>
-
-                        <!-- 7. Santo Tomás de Aquino -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santo tomas de aquino doctor angelico teologia">
-                            <button onclick="toggleLectura('santo-7', 'icon-santo-7')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>📚 7. Santo Tomás de Aquino (Doctor Angélico) — 28 de enero</span>
-                                <span id="icon-santo-7" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-7" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Brillante filósofo y teólogo medieval, autor de la Suma Teológica.</p>
-                            </div>
-                        </div>
-
-                        <!-- 8. San José -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san jose esposo virgen maria patrono iglesia">
-                            <button onclick="toggleLectura('santo-8', 'icon-santo-8')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span> carpentry 8. San José (Esposo de la Virgen María) — 19 de marzo</span>
-                                <span id="icon-santo-8" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-8" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Custodio de la Sagrada Familia y patrono de la Iglesia universal.</p>
-                            </div>
-                        </div>
-
-                        <!-- 9. Santa Rosa de Lima -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa rosa de lima primera santa america peru">
-                            <button onclick="toggleLectura('santo-9', 'icon-santo-9')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🌹 9. Santa Rosa de Lima (Patrona de América) — 23 de agosto</span>
-                                <span id="icon-santo-9" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-9" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Primera santa de América, entregada a la oración y servicio a los pobres en Lima.</p>
-                            </div>
-                        </div>
-
-                        <!-- 10. San Martín de Porres -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san martin de porres escoba peru humildad">
-                            <button onclick="toggleLectura('santo-10', 'icon-santo-10')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🧹 10. San Martín de Porres — 3 de noviembre</span>
-                                <span id="icon-santo-10" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-10" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Fray dominico peruano famoso por su humildad, milagros y caridad.</p>
-                            </div>
-                        </div>
-
-                        <!-- 11. San Juan Pablo II -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan pablo ii papa jovenes">
-                            <button onclick="toggleLectura('santo-11', 'icon-santo-11')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🇻🇦 11. San Juan Pablo II — 22 de octubre</span>
-                                <span id="icon-santo-11" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-11" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Papa polaco promotor de las Jornadas Mundiales de la Juventud.</p>
-                            </div>
-                        </div>
-
-                        <!-- 12. Santa Teresa de Calcuta -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="madre teresa de calcuta caridad misioneras">
-                            <button onclick="toggleLectura('santo-12', 'icon-santo-12')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>💙 12. Santa Teresa de Calcuta — 5 de septiembre</span>
-                                <span id="icon-santo-12" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-12" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Fundadora de las Misioneras de la Caridad, sirviendo a los más pobres.</p>
-                            </div>
-                        </div>
-
-                        <!-- 13. San Antonio de Padua -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san antonio de padua cosas perdidas">
-                            <button onclick="toggleLectura('santo-13', 'icon-santo-13')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🍞 13. San Antonio de Padua — 13 de junio</span>
-                                <span id="icon-santo-13" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-13" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Gran predicador franciscano, invocado para encontrar objetos perdidos.</p>
-                            </div>
-                        </div>
-
-                        <!-- 14. San Judas Tadeo -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san judas tadeo abogado casos dificiles">
-                            <button onclick="toggleLectura('santo-14', 'icon-santo-14')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>✨ 14. San Judas Tadeo (Casos Difíciles) — 28 de octubre</span>
-                                <span id="icon-santo-14" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-14" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Apóstol de Jesús y patrono de las causas difíciles y desesperadas.</p>
-                            </div>
-                        </div>
-
-                        <!-- 15. San Expedito -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san expedito causas urgentes">
-                            <button onclick="toggleLectura('santo-15', 'icon-santo-15')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⚡ 15. San Expedito (Causas Urgentes) — 19 de abril</span>
-                                <span id="icon-santo-15" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-15" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Mártir romano conocido por su rápida respuesta en situaciones urgentes.</p>
-                            </div>
-                        </div>
-
-                        <!-- 16. San Nicolás de Mira -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san nicolas de mira papa noel">
-                            <button onclick="toggleLectura('santo-16', 'icon-santo-16')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🎁 16. San Nicolás de Mira — 6 de diciembre</span>
-                                <span id="icon-santo-16" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-16" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Obispo generoso cuyas acciones inspiraron la tradición de Papá Noel.</p>
-                            </div>
-                        </div>
-
-                        <!-- 17. San Valentín -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san valentin enamorados matrimonio">
-                            <button onclick="toggleLectura('santo-17', 'icon-santo-17')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>❤️ 17. San Valentín — 14 de febrero</span>
-                                <span id="icon-santo-17" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-17" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Sacerdote que defendió el matrimonio cristiano y fue martirizado.</p>
-                            </div>
-                        </div>
-
-                        <!-- 18. San Pablo -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pablo apostol de las gentes">
-                            <button onclick="toggleLectura('santo-18', 'icon-santo-18')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⚔️ 18. San Pablo (Apóstol de las Gentes) — 29 de junio</span>
-                                <span id="icon-santo-18" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-18" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Perseguidor convertido en el gran misionero del Evangelio por el Mediterráneo.</p>
-                            </div>
-                        </div>
-
-                        <!-- 19. San Pedro -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pedro primer papa apostol">
-                            <button onclick="toggleLectura('santo-19', 'icon-santo-19')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🔑 19. San Pedro (Príncipe de los Apóstoles) — 29 de junio</span>
-                                <span id="icon-santo-19" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-19" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Pescador elegido por Jesús como roca de su Iglesia.</p>
-                            </div>
-                        </div>
-
-                        <!-- 20. San Juan Evangelista -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan evangelista discipulo amado">
-                            <button onclick="toggleLectura('santo-20', 'icon-santo-20')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🦅 20. San Juan Evangelista — 27 de diciembre</span>
-                                <span id="icon-santo-20" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-20" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> El discípulo amado, autor del cuarto Evangelio y del Apocalipsis.</p>
-                            </div>
-                        </div>
-
-                        <!-- 21. Santa Lucía -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa lucia patrona vista ojos">
-                            <button onclick="toggleLectura('santo-21', 'icon-santo-21')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>👁️ 21. Santa Lucía — 13 de diciembre</span>
-                                <span id="icon-santo-21" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-21" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Mártir siciliana, protectora de la vista y los ojos.</p>
-                            </div>
-                        </div>
-
-                        <!-- 22. San Patricio -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san patricio irlanda trebol">
-                            <button onclick="toggleLectura('santo-22', 'icon-santo-22')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🍀 22. San Patricio de Irlanda — 17 de marzo</span>
-                                <span id="icon-santo-22" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-22" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Obispo que evangelizó Irlanda utilizando el trébol.</p>
-                            </div>
-                        </div>
-
-                        <!-- 23. Santa Águeda -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa agueda martir sicilia">
-                            <button onclick="toggleLectura('santo-23', 'icon-santo-23')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🔥 23. Santa Águeda — 5 de febrero</span>
-                                <span id="icon-santo-23" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-23" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Joven noble que resistió crueles torturas por su fe.</p>
-                            </div>
-                        </div>
-
-                        <!-- 24. San Juan Bautista -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan bautista precursor jordand">
-                            <button onclick="toggleLectura('santo-24', 'icon-santo-24')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🌊 24. San Juan Bautista — 24 de junio</span>
-                                <span id="icon-santo-24" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-24" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Precursor que bautizó a Jesús en el río Jordán.</p>
-                            </div>
-                        </div>
-
-                        <!-- 25. Santa Bernardita -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa bernadette lourdes apariciones">
-                            <button onclick="toggleLectura('santo-25', 'icon-santo-25')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>💧 25. Santa Bernardita Soubirous — 16 de abril</span>
-                                <span id="icon-santo-25" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-25" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Pastora a quien se apareció la Virgen en Lourdes.</p>
-                            </div>
-                        </div>
-
-                        <!-- 26. San Benito -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san benito nursia ora et labora">
-                            <button onclick="toggleLectura('santo-26', 'icon-santo-26')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>📖 26. San Benito de Nursia — 11 de julio</span>
-                                <span id="icon-santo-26" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-26" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Patriarca de los monjes de Occidente, creador de "Ora et labora".</p>
-                            </div>
-                        </div>
-
-                        <!-- 27. San Ignacio de Loyola -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san ignacio de loyola jesuitas">
-                            <button onclick="toggleLectura('santo-27', 'icon-santo-27')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🛡️ 27. San Ignacio de Loyola — 31 de julio</span>
-                                <span id="icon-santo-27" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-27" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Fundador de los jesuitas y autor de los Ejercicios Espirituales.</p>
-                            </div>
-                        </div>
-
-                        <!-- 28. Santa Juana de Arco -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa juana de arco francia">
-                            <button onclick="toggleLectura('santo-28', 'icon-santo-28')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⚔️ 28. Santa Juana de Arco — 30 de mayo</span>
-                                <span id="icon-santo-28" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-28" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Heroína y mártir francesa que defendió su patria con valor.</p>
-                            </div>
-                        </div>
-
-                        <!-- 29. San Lorenzo -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san lorenzo martir parrilla">
-                            <button onclick="toggleLectura('santo-29', 'icon-santo-29')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🔥 29. San Lorenzo Diácono — 10 de agosto</span>
-                                <span id="icon-santo-29" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-29" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Diácono romano que consideraba a los pobres como el tesoro de la Iglesia.</p>
-                            </div>
-                        </div>
-
-                        <!-- 30. San Esteban -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san esteban protomartir">
-                            <button onclick="toggleLectura('santo-30', 'icon-santo-30')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🕊️ 30. San Esteban Protomártir — 26 de diciembre</span>
-                                <span id="icon-santo-30" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-30" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Primer mártir del cristianismo que perdonó a sus verdugos.</p>
-                            </div>
-                        </div>
-
-                        <!-- 31. San Francisco Javier -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san francisco javier asia misionero">
-                            <button onclick="toggleLectura('santo-31', 'icon-santo-31')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🌏 31. San Francisco Javier — 3 de diciembre</span>
-                                <span id="icon-santo-31" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-31" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Gigante de la evangelización en la India y Japón.</p>
-                            </div>
-                        </div>
-
-                        <!-- 32. Santa Mónica -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa monica madre de agustin">
-                            <button onclick="toggleLectura('santo-32', 'icon-santo-32')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>👩‍👧 32. Santa Mónica — 27 de agosto</span>
-                                <span id="icon-santo-32" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-32" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Madre persistente en la oración por la conversión de San Agustín.</p>
-                            </div>
-                        </div>
-
-                        <!-- 33. San Vicente de Paúl -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san vicente de paul caridad pobres">
-                            <button onclick="toggleLectura('santo-33', 'icon-santo-33')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🍞 33. San Vicente de Paúl — 27 de septiembre</span>
-                                <span id="icon-santo-33" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-33" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Apóstol de la caridad y protector de los necesitados.</p>
-                            </div>
-                        </div>
-
-                        <!-- 34. San Juan de la Cruz -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan de la cruz mistico poeta">
-                            <button onclick="toggleLectura('santo-34', 'icon-santo-34')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>📜 34. San Juan de la Cruz — 14 de diciembre</span>
-                                <span id="icon-santo-34" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-34" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Poeta místico y Doctor de la Iglesia carmelita.</p>
-                            </div>
-                        </div>
-
-                        <!-- 35. Santa Teresa de Ávila -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa teresa de avila jesus doctora">
-                            <button onclick="toggleLectura('santo-35', 'icon-santo-35')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⛪ 35. Santa Teresa de Ávila — 15 de octubre</span>
-                                <span id="icon-santo-35" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-35" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Reformadora del Carmelo y primera mujer Doctora de la Iglesia.</p>
-                            </div>
-                        </div>
-
-                        <!-- 36. Padre Pío -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san pio de pietrelcina padre pio estigmas">
-                            <button onclick="toggleLectura('santo-36', 'icon-santo-36')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🩸 36. San Pío de Pietrelcina (Padre Pío) — 23 de septiembre</span>
-                                <span id="icon-santo-36" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-36" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Sacerdote estigmatizado y célebre confesor capuchino.</p>
-                            </div>
-                        </div>
-
-                        <!-- 37. San Maximiliano Kolbe -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san maximiliano kolbe auschwitz martir">
-                            <button onclick="toggleLectura('santo-37', 'icon-santo-37')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⛓️ 37. San Maximiliano Kolbe — 14 de agosto</span>
-                                <span id="icon-santo-37" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-37" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Dio su vida por un padre de familia en el campo de Auschwitz.</p>
-                            </div>
-                        </div>
-
-                        <!-- 38. Santa Faustina -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa faustina kowalska misericordia">
-                            <button onclick="toggleLectura('santo-38', 'icon-santo-38')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>✨ 38. Santa Faustina Kowalska — 5 de octubre</span>
-                                <span id="icon-santo-38" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-38" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Apóstol de la Divina Misericordia en Polonia.</p>
-                            </div>
-                        </div>
-
-                        <!-- 39. San Juan Macías -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan macias peru dominico">
-                            <button onclick="toggleLectura('santo-39', 'icon-santo-39')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🇵🇪 39. San Juan Macías — 18 de septiembre</span>
-                                <span id="icon-santo-39" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-39" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Fray dominico portero en Lima, entregado a los pobres.</p>
-                            </div>
-                        </div>
-
-                        <!-- 40. San Roque -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san roque peregrino peste">
-                            <button onclick="toggleLectura('santo-40', 'icon-santo-40')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🐕 40. San Roque — 16 de agosto</span>
-                                <span id="icon-santo-40" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-40" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Peregrino protector contra las pestes y enfermedades.</p>
-                            </div>
-                        </div>
-
-                        <!-- 41. San Josemaría Escrivá -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san josemaria escriva opus dei trabajo">
-                            <button onclick="toggleLectura('santo-41', 'icon-santo-41')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>💼 41. San Josemaría Escrivá — 26 de junio</span>
-                                <span id="icon-santo-41" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-41" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Fundador del Opus Dei, predicador de la santidad en el trabajo ordinario.</p>
-                            </div>
-                        </div>
-
-                        <!-- 42. Santa Cecilia -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa cecilia patrona musica">
-                            <button onclick="toggleLectura('santo-42', 'icon-santo-42')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🎵 42. Santa Cecilia — 22 de noviembre</span>
-                                <span id="icon-santo-42" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-42" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Virgen y mártir romana, patrona universal de los músicos.</p>
-                            </div>
-                        </div>
-
-                        <!-- 43. San Martín de Tours -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san martin de tours capa">
-                            <button onclick="toggleLectura('santo-43', 'icon-santo-43')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🧥 43. San Martín de Tours — 11 de noviembre</span>
-                                <span id="icon-santo-43" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-43" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Soldado que compartió su capa con un mendigo.</p>
-                            </div>
-                        </div>
-
-                        <!-- 44. San Cristóbal -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san cristobal protector viajeros">
-                            <button onclick="toggleLectura('santo-44', 'icon-santo-44')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🚗 44. San Cristóbal — 25 de julio</span>
-                                <span id="icon-santo-44" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-44" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Gigante que cruzaba viajeros y llevó al Niño Jesús.</p>
-                            </div>
-                        </div>
-
-                        <!-- 45. San Felipe Neri -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san felipe neri alegria roma">
-                            <button onclick="toggleLectura('santo-45', 'icon-santo-45')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>😄 45. San Felipe Neri — 26 de mayo</span>
-                                <span id="icon-santo-45" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-45" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Santo de la alegría y del buen humor en Roma.</p>
-                            </div>
-                        </div>
-
-                        <!-- 46. Santa Inés -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa ines virgen martir cordero">
-                            <button onclick="toggleLectura('santo-46', 'icon-santo-46')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🐑 46. Santa Inés de Roma — 21 de enero</span>
-                                <span id="icon-santo-46" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-46" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Joven mártir de gran pureza, simbolizada con un cordero.</p>
-                            </div>
-                        </div>
-
-                        <!-- 47. Cura de Ars -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san juan vianney cura ars confesionario">
-                            <button onclick="toggleLectura('santo-47', 'icon-santo-47')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⛪ 47. San Juan María Vianney (Cura de Ars) — 4 de agosto</span>
-                                <span id="icon-santo-47" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-47" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Patrono de los sacerdotes, célebre por sus horas en el confesionario.</p>
-                            </div>
-                        </div>
-
-                        <!-- 48. Santa Filomena -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="santa filomena virgen martir">
-                            <button onclick="toggleLectura('santo-48', 'icon-santo-48')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>⭐ 48. Santa Filomena — 11 de agosto</span>
-                                <span id="icon-santo-48" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-48" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Joven virgen y mártir descubierta en las catacumbas.</p>
-                            </div>
-                        </div>
-
-                        <!-- 49. San Damián de Molokai -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="san damian de molokai leprosos">
-                            <button onclick="toggleLectura('santo-49', 'icon-santo-49')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>🏝️ 49. San Damián de Molokai — 10 de mayo</span>
-                                <span id="icon-santo-49" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-49" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Apóstol de los leprosos en la isla hawaiana de Molokai.</p>
-                            </div>
-                        </div>
-
-                        <!-- 50. Carlo Acutis -->
-                        <div class="item-santo border rounded-xl overflow-hidden shadow-xs bg-slate-50" data-nombre="carlo acutis ciberapostol eucaristia beato">
-                            <button onclick="toggleLectura('santo-50', 'icon-santo-50')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
-                                <span>💻 50. Beato Carlo Acutis (Ciberapóstol) — 12 de octubre</span>
-                                <span id="icon-santo-50" class="text-xl">▼</span>
-                            </button>
-                            <div id="santo-50" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
-                                <p><strong>Historia:</strong> Joven informático enamorado de la Eucaristía, autopista hacia el cielo.</p>
-                            </div>
-                        </div>
-
-                    </div>
+                    <div id="lista-santos" class="space-y-3"></div>
                 </div>
             </section>
 
-            <!-- 8. SECCIÓN CHAT Y AVISOS -->
+            <!-- 8. CHAT -->
             <section id="tab-chat" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border max-w-2xl mx-auto">
                     <h2 class="text-xl font-bold text-gray-800 mb-1">💬 Chat y Avisos Comunitarios</h2>
                     <p class="text-xs text-gray-500 mb-4">Tus mensajes se enviarán usando el nombre con el que iniciaste sesión.</p>
-
                     <div class="border rounded-xl p-3 bg-slate-50 mb-4 space-y-2">
                         <textarea id="chat-mensaje" placeholder="Escribe un mensaje o aviso parroquial..." class="w-full border rounded-lg p-3 text-sm bg-white h-20 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                         <div class="flex justify-between items-center">
@@ -966,245 +246,272 @@
                             <button onclick="enviarMensajeCloud()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">Enviar Mensaje</button>
                         </div>
                     </div>
-
-                    <div id="contenedor-mensajes" class="space-y-3">
-                        <!-- Se cargan dinámicamente de Firebase -->
-                    </div>
+                    <div id="contenedor-mensajes" class="space-y-3"></div>
                 </div>
             </section>
 
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-white border-t mt-12 py-6 text-center text-xs text-gray-500 space-y-1">
         <p>© 2026 Catequesis Parroquial. Todos los derechos reservados.</p>
         <p class="font-medium text-indigo-600">Creado por Roberto</p>
     </footer>
 
-    <!-- Script de lógica -->
     <script>
         let esAdmin = false;
         let usuarioActual = "";
 
-        window.onload = function() {
-            let guardado = localStorage.getItem('catequesis_usuario');
-            if (guardado) {
-                usuarioActual = guardado;
-                document.getElementById('saludo-usuario').innerText = usuarioActual;
-                document.getElementById('nombre-etiqueta-chat').innerText = usuarioActual;
-                document.getElementById('modal-login').classList.add('hidden');
-            }
-        };
+        // ===== HELPERS =====
+        function escapeHtml(t) {
+            return String(t ?? "").replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        function normalizar(s) {
+            return String(s || "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+        function fechaLocalISO(d = new Date()) {
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        function formatearDetalle(d) {
+            if (d == null) return "";
+            if (typeof d === 'string') return d;
+            if (Array.isArray(d)) return d.map(x => (x && typeof x === 'object') ? `${x.nombre ?? ''}: ${x.estado ?? ''}` : String(x)).join(' · ');
+            if (typeof d === 'object') return Object.entries(d).map(([k, v]) => `${k}: ${v}`).join(' · ');
+            return String(d);
+        }
+        function selectEstadoHTML(habilitado) {
+            return `<select class="select-asistencia border rounded px-3 py-1 text-sm bg-white disabled:bg-gray-100" ${habilitado ? '' : 'disabled'}>
+                <option value="Presente">Presente</option><option value="Ausente">Ausente</option><option value="Justificado">Justificado</option></select>`;
+        }
 
-        function guardarSesionUsuario() {
-            let input = document.getElementById('input-nombre-usuario').value.trim();
-            if(!input) {
-                alert("Por favor, escribe tu nombre para continuar.");
-                return;
-            }
-            usuarioActual = input;
-            localStorage.setItem('catequesis_usuario', usuarioActual);
+        // ===== TABS =====
+        const CLASE_TAB = "py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition";
+        const CLASE_TAB_ACTIVA = "py-3 px-3 sm:px-4 font-medium text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap focus:outline-none transition";
+        const TABS = ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'recursos', 'santos', 'chat'];
+
+        function cambiarTab(tab) {
+            TABS.forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('btn-' + t).className = CLASE_TAB;
+            });
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('btn-' + tab).className = CLASE_TAB_ACTIVA;
+        }
+
+        // ===== SESIÓN =====
+        function aplicarNombre() {
             document.getElementById('saludo-usuario').innerText = usuarioActual;
             document.getElementById('nombre-etiqueta-chat').innerText = usuarioActual;
             document.getElementById('modal-login').classList.add('hidden');
         }
+        function guardarSesionUsuario() {
+            let input = document.getElementById('input-nombre-usuario').value.trim();
+            if (!input) return alert("Por favor, escribe tu nombre para continuar.");
+            usuarioActual = input;
+            localStorage.setItem('catequesis_usuario', usuarioActual);
+            aplicarNombre();
+        }
 
-        function cambiarTab(tab) {
-            ['asistencia', 'registro', 'tareas', 'misas', 'lecturas', 'recursos', 'santos', 'chat'].forEach(t => {
-                document.getElementById('tab-' + t).classList.add('hidden');
-                document.getElementById('btn-' + t).className = "py-3 px-3 sm:px-4 font-medium text-gray-500 hover:text-indigo-600 whitespace-nowrap focus:outline-none transition";
-            });
-            document.getElementById('tab-' + tab).classList.remove('hidden');
-            document.getElementById('btn-' + tab).className = "py-3 px-3 sm:px-4 font-medium text-indigo-600 border-b-2 border-indigo-600 whitespace-nowrap focus:outline-none transition";
+        // ===== MODO ADMIN =====
+        function aplicarModoAdmin() {
+            const on = esAdmin;
+            const estado = document.getElementById('estado-admin');
+            const btnLogin = document.getElementById('btn-login');
+            const btnAsis = document.getElementById('btn-guardar-asistencia');
+            const btnMisas = document.getElementById('btn-guardar-misas');
+
+            estado.innerText = on ? "Modo Administrador 🔓" : "Modo Público";
+            estado.className = on
+                ? "bg-emerald-800 text-xs px-3 py-1 rounded-full text-emerald-200 border border-emerald-600"
+                : "bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600";
+            btnLogin.innerText = on ? "🔒 Cerrar Sesión" : "🔑 Acceso Catequistas";
+            btnLogin.className = on
+                ? "bg-red-600 hover:bg-red-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-red-500"
+                : "bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-indigo-500";
+
+            document.querySelectorAll('.select-asistencia').forEach(el => el.disabled = !on);
+            btnAsis.disabled = !on;
+            btnAsis.className = on
+                ? "bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-2 rounded-lg transition w-full sm:w-auto"
+                : "bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto";
+            btnAsis.innerText = on ? "Guardar Asistencia" : "🔒 Guardar Asistencia (Requiere Admin)";
+
+            btnMisas.disabled = !on;
+            btnMisas.className = on
+                ? "bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg transition"
+                : "bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed";
+            btnMisas.innerText = on ? "Guardar Horarios" : "🔒 Guardar Horarios (Requiere Admin)";
+
+            document.getElementById('panel-add-monaguillo').classList.toggle('hidden', !on);
+            document.getElementById('panel-crear-tarea').classList.toggle('hidden', !on);
+            document.querySelectorAll('.col-accion-admin').forEach(el => el.classList.toggle('hidden', !on));
+            document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = !on);
+
+            // Recargar para que aparezcan/desaparezcan los botones 🗑️
+            try {
+                window.cargarChatCloud();
+                window.cargarMonaguillosCloud();
+                window.cargarTareasCloud();
+            } catch (e) { console.error("No se pudo recargar desde la nube:", e); }
         }
 
         function toggleAdmin() {
             if (!esAdmin) {
-                let password = prompt("Introduce la contraseña de Administrador:");
-                if (password === "catequesis") {
-                    esAdmin = true;
-                    document.getElementById('estado-admin').innerText = "Modo Administrador 🔓";
-                    document.getElementById('estado-admin').className = "bg-emerald-800 text-xs px-3 py-1 rounded-full text-emerald-200 border border-emerald-600";
-                    document.getElementById('btn-login').innerText = "🔒 Cerrar Sesión";
-                    document.getElementById('btn-login').className = "bg-red-600 hover:bg-red-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-red-500";
-                    
-                    document.querySelectorAll('.select-asistencia').forEach(el => el.disabled = false);
-                    let btnAsis = document.getElementById('btn-guardar-asistencia');
-                    btnAsis.disabled = false;
-                    btnAsis.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-2 rounded-lg transition w-full sm:w-auto";
-                    btnAsis.innerText = "Guardar Asistencia";
-
-                    document.getElementById('panel-add-monaguillo').classList.remove('hidden');
-                    document.querySelectorAll('.col-accion-admin').forEach(el => el.classList.remove('hidden'));
-                    document.getElementById('panel-crear-tarea').classList.remove('hidden');
-
-                    let btnMisas = document.getElementById('btn-guardar-misas');
-                    btnMisas.disabled = false;
-                    btnMisas.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg transition";
-                    btnMisas.innerText = "Guardar Horarios";
-
-                    document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = false);
-                    window.cargarChatCloud();
-                    alert("¡Acceso de administrador concedido!");
-                } else if (password !== null) {
-                    alert("Contraseña incorrecta.");
-                }
+                abrirModalAdmin();
             } else {
                 esAdmin = false;
-                document.getElementById('estado-admin').innerText = "Modo Público";
-                document.getElementById('estado-admin').className = "bg-indigo-800 text-xs px-3 py-1 rounded-full text-indigo-200 border border-indigo-600";
-                document.getElementById('btn-login').innerText = "🔑 Acceso Catequistas";
-                document.getElementById('btn-login').className = "bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition border border-indigo-500";
+                aplicarModoAdmin();
+            }
+        }
 
-                document.querySelectorAll('.select-asistencia').forEach(el => el.disabled = true);
-                let btnAsis = document.getElementById('btn-guardar-asistencia');
-                btnAsis.disabled = true;
-                btnAsis.className = "bg-gray-300 text-gray-500 font-medium px-5 py-2 rounded-lg transition cursor-not-allowed w-full sm:w-auto";
-                btnAsis.innerText = "🔒 Guardar Asistencia (Requiere Admin)";
+        function abrirModalAdmin() {
+            document.getElementById('input-password-admin').value = "";
+            document.getElementById('error-password-admin').classList.add('hidden');
+            document.getElementById('modal-admin').classList.remove('hidden');
+            document.getElementById('input-password-admin').focus();
+        }
 
-                document.getElementById('panel-add-monaguillo').classList.add('hidden');
-                document.querySelectorAll('.col-accion-admin').forEach(el => el.classList.add('hidden'));
-                document.getElementById('panel-crear-tarea').classList.add('hidden');
+        function cerrarModalAdmin() {
+            document.getElementById('modal-admin').classList.add('hidden');
+        }
 
-                let btnMisas = document.getElementById('btn-guardar-misas');
-                btnMisas.disabled = true;
-                btnMisas.className = "bg-gray-300 text-gray-500 font-medium px-6 py-2 rounded-lg transition cursor-not-allowed";
-                btnMisas.innerText = "🔒 Guardar Horarios (Requiere Admin)";
-
-                document.querySelectorAll('#misa-630, #misa-1030, #misa-500').forEach(el => el.disabled = true);
-                window.cargarChatCloud();
-                alert("Has salido del modo administrador.");
+        function confirmarAdmin() {
+            let password = document.getElementById('input-password-admin').value;
+            if (password === "catequesis") {
+                esAdmin = true;
+                cerrarModalAdmin();
+                aplicarModoAdmin();
+            } else {
+                document.getElementById('error-password-admin').classList.remove('hidden');
             }
         }
 
         window.toggleLectura = function(idCuerpo, idIcono) {
             let cuerpo = document.getElementById(idCuerpo);
             let icono = document.getElementById(idIcono);
-            if (cuerpo.classList.contains('hidden')) {
-                cuerpo.classList.remove('hidden');
-                icono.innerText = "▲";
-            } else {
-                cuerpo.classList.add('hidden');
-                icono.innerText = "▼";
-            }
-        }
+            let oculto = cuerpo.classList.toggle('hidden');
+            icono.innerText = oculto ? "▼" : "▲";
+        };
 
-        window.filtrarSantos = function() {
-            let filtro = document.getElementById('buscador-santos').value.toLowerCase();
-            let items = document.querySelectorAll('.item-santo');
-            items.forEach(item => {
-                let textoBusqueda = item.getAttribute('data-nombre') || "";
-                let contenidoVisible = item.innerText.toLowerCase();
-                if (textoBusqueda.includes(filtro) || contenidoVisible.includes(filtro)) {
-                    item.style.display = "";
-                } else {
-                    item.style.display = "none";
-                }
-            });
+        // ===== ASISTENCIA: CATEQUISTAS Y MONAGUILLOS =====
+        const CATEQUISTAS = ["Carolina", "Flor", "María Elena"];
+
+        function pintarCatequistas() {
+            document.getElementById('tabla-catequistas-body').innerHTML = CATEQUISTAS.map(n => `
+                <tr><td class="p-3 font-medium text-gray-800">${escapeHtml(n)}</td>
+                <td class="p-3 text-center">${selectEstadoHTML(esAdmin)}</td></tr>`).join('');
         }
 
         window.agregarMonaguilloCloud = async function() {
-            let nombre = document.getElementById('nombre-nuevo-monaguillo').value;
-            if(!nombre) return alert("Escribe el nombre del monaguillo.");
+            let nombre = document.getElementById('nombre-nuevo-monaguillo').value.trim();
+            if (!nombre) return alert("Escribe el nombre del monaguillo.");
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "monaguillos"), { nombre: nombre });
                 document.getElementById('nombre-nuevo-monaguillo').value = "";
                 window.cargarMonaguillosCloud();
-            } catch(e) { console.error(e); }
-        }
+            } catch (e) { console.error(e); }
+        };
 
         window.cargarMonaguillosCloud = async function() {
             let tbody = document.getElementById('tabla-monaguillos-body');
-            tbody.innerHTML = "";
-            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "monaguillos"));
-            querySnapshot.forEach((docSnap) => {
-                let data = docSnap.data();
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-medium text-gray-800">${data.nombre}</td>
-                    <td class="p-3 text-center">
-                        <select class="select-asistencia border rounded px-3 py-1 text-sm bg-white" ${esAdmin ? '' : 'disabled'}>
-                            <option value="Presente">Presente</option>
-                            <option value="Ausente">Ausente</option>
-                            <option value="Justificado">Justificado</option>
-                        </select>
-                    </td>
-                    <td class="p-3 text-center col-accion-admin ${esAdmin ? '' : 'hidden'}">
-                        <button onclick="eliminarMonaguilloCloud('${docSnap.id}')" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded">🗑️</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+            try {
+                let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "monaguillos"));
+                tbody.innerHTML = "";
+                querySnapshot.forEach((docSnap) => {
+                    let data = docSnap.data();
+                    let tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-3 font-medium text-gray-800">${escapeHtml(data.nombre)}</td>
+                        <td class="p-3 text-center">${selectEstadoHTML(esAdmin)}</td>
+                        <td class="p-3 text-center col-accion-admin ${esAdmin ? '' : 'hidden'}">
+                            <button onclick="eliminarMonaguilloCloud('${docSnap.id}')" class="text-red-500 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded">🗑️</button>
+                        </td>`;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-sm text-red-600">No se pudo cargar la lista: ${escapeHtml(e.message)}</td></tr>`;
+            }
+        };
 
         window.eliminarMonaguilloCloud = async function(id) {
             await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "monaguillos", id));
             window.cargarMonaguillosCloud();
-        }
+        };
 
         window.guardarAsistenciaCloud = async function() {
-            let fecha = document.getElementById('fecha-asistencia').value || new Date().toLocaleDateString('es-ES');
+            let fecha = document.getElementById('fecha-asistencia').value || fechaLocalISO();
+            let asistencias = [];
+            document.querySelectorAll('#tab-asistencia tbody tr').forEach(tr => {
+                let select = tr.querySelector('.select-asistencia');
+                if (!select) return;
+                asistencias.push({ nombre: tr.querySelector('td').innerText.trim(), estado: select.value });
+            });
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
                     fecha: fecha,
-                    detalle: `Asistencia guardada por ${usuarioActual}`
+                    detalle: formatearDetalle(asistencias),
+                    asistencias: asistencias,
+                    registradoPor: usuarioActual || "Anónimo",
+                    creadoEn: Date.now()
                 });
                 alert("¡Asistencia guardada!");
                 window.cargarRegistroCloud();
-            } catch(e) { console.error(e); }
-        }
+            } catch (e) { console.error(e); alert("No se pudo guardar. Revisa la consola (F12)."); }
+        };
 
         window.cargarRegistroCloud = async function() {
             let tbody = document.getElementById('tabla-registro-body');
-            tbody.innerHTML = "";
-            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "registros_asistencia"));
-            querySnapshot.forEach((docSnap) => {
-                let data = docSnap.data();
-                let tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-3 font-medium text-gray-800">${data.fecha || 'Sin fecha'}</td><td class="p-3 text-sm text-gray-600">${data.detalle}</td>`;
-                tbody.appendChild(tr);
-            });
-        }
+            try {
+                let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "registros_asistencia"));
+                let registros = [];
+                querySnapshot.forEach(docSnap => registros.push(docSnap.data()));
+                registros.sort((a, b) => (b.creadoEn || 0) - (a.creadoEn || 0));
+                tbody.innerHTML = registros.map(d => `
+                    <tr><td class="p-3 font-medium text-gray-800">${escapeHtml(d.fecha || 'Sin fecha')}</td>
+                    <td class="p-3 text-sm text-gray-600">${escapeHtml(formatearDetalle(d.detalle))}</td></tr>`).join('');
+            } catch (e) { console.error(e); }
+        };
 
+        // ===== TAREAS =====
         window.agregarTareaCloud = async function() {
-            let texto = document.getElementById('input-titulo-tarea').value;
-            if(!texto) return alert("Escribe la tarea.");
+            let texto = document.getElementById('input-titulo-tarea').value.trim();
+            if (!texto) return alert("Escribe la tarea.");
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "tareas"), {
-                    texto: texto,
-                    estado: "Pendiente",
-                    autor: usuarioActual
+                    texto: texto, estado: "Pendiente", autor: usuarioActual
                 });
                 document.getElementById('input-titulo-tarea').value = "";
                 window.cargarTareasCloud();
-            } catch(e) { console.error(e); }
-        }
+            } catch (e) { console.error(e); }
+        };
 
         window.cargarTareasCloud = async function() {
             let contenedor = document.getElementById('contenedor-tareas');
-            contenedor.innerHTML = "";
-            let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "tareas"));
-            querySnapshot.forEach((docSnap) => {
-                let data = docSnap.data();
-                let div = document.createElement('div');
-                div.className = "border rounded-xl p-4 bg-slate-50 flex justify-between items-center";
-                div.innerHTML = `
-                    <div>
-                        <p class="font-medium text-gray-800 text-sm">${data.texto}</p>
-                        <span class="text-xs text-indigo-600 font-semibold">Asignado por: ${data.autor || 'Admin'}</span>
-                    </div>
-                    ${esAdmin ? `<button onclick="eliminarTareaCloud('${docSnap.id}')" class="text-red-500 text-xs border border-red-200 bg-white px-2 py-1 rounded">🗑️</button>` : ''}
-                `;
-                contenedor.appendChild(div);
-            });
-        }
+            try {
+                let querySnapshot = await window.firebaseModules.getDocs(window.firebaseModules.collection(window.db, "tareas"));
+                contenedor.innerHTML = "";
+                querySnapshot.forEach((docSnap) => {
+                    let data = docSnap.data();
+                    let div = document.createElement('div');
+                    div.className = "border rounded-xl p-4 bg-slate-50 flex justify-between items-center";
+                    div.innerHTML = `
+                        <div>
+                            <p class="font-medium text-gray-800 text-sm">${escapeHtml(data.texto)}</p>
+                            <span class="text-xs text-indigo-600 font-semibold">Asignado por: ${escapeHtml(data.autor || 'Admin')}</span>
+                        </div>
+                        ${esAdmin ? `<button onclick="eliminarTareaCloud('${docSnap.id}')" class="text-red-500 text-xs border border-red-200 bg-white px-2 py-1 rounded">🗑️</button>` : ''}`;
+                    contenedor.appendChild(div);
+                });
+            } catch (e) { console.error(e); }
+        };
 
         window.eliminarTareaCloud = async function(id) {
             await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "tareas", id));
             window.cargarTareasCloud();
-        }
+        };
 
+        // ===== MISAS =====
         window.guardarMisasCloud = async function() {
             let m630 = document.getElementById('misa-630').value;
             let m1030 = document.getElementById('misa-1030').value;
@@ -1213,9 +520,16 @@
                 await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, "config", "misas_actuales"), {
                     m630: m630, m1030: m1030, m500: m500
                 });
+                await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "registros_asistencia"), {
+                    fecha: "Misas · " + fechaLocalISO(),
+                    detalle: `6:30 a. m.: ${m630 || '—'} | 10:30 a. m.: ${m1030 || '—'} | 5:00 p. m.: ${m500 || '—'}`,
+                    registradoPor: usuarioActual || "Anónimo",
+                    creadoEn: Date.now()
+                });
                 alert("¡Horarios de misas guardados!");
-            } catch(e) { console.error(e); }
-        }
+                window.cargarRegistroCloud();
+            } catch (e) { console.error(e); }
+        };
 
         window.cargarMisasCloud = async function() {
             try {
@@ -1226,31 +540,359 @@
                     document.getElementById('misa-1030').value = data.m1030 || "";
                     document.getElementById('misa-500').value = data.m500 || "";
                 }
-            } catch(e) { console.error(e); }
+            } catch (e) { console.error(e); }
+        };
+
+        // ===== LECTURAS DEL DÍA =====
+        const BLOQUES_LECTURA = [
+            { clave: 'first_reading',  id: 'lectura-1',  etiqueta: '📌 Primera Lectura',    fondo: 'bg-gray-50 hover:bg-gray-100', color: 'text-indigo-700' },
+            { clave: 'psalm',          id: 'salmo',      etiqueta: '🎵 Salmo Responsorial', fondo: 'bg-gray-50 hover:bg-gray-100', color: 'text-indigo-700' },
+            { clave: 'second_reading', id: 'lectura-2',  etiqueta: '📜 Segunda Lectura',    fondo: 'bg-gray-50 hover:bg-gray-100', color: 'text-indigo-700' },
+            { clave: 'gospel',         id: 'evangelio',  etiqueta: '📖 Santo Evangelio',    fondo: 'bg-indigo-50 hover:bg-indigo-100', color: 'text-indigo-900' }
+        ];
+        const lecturasCache = {};
+
+        function pintarEsqueletoLecturas() {
+            document.getElementById('acordeon-lecturas').innerHTML = BLOQUES_LECTURA.map(b => `
+                <div id="contenedor-${b.id}" class="border rounded-xl overflow-hidden shadow-sm">
+                    <button onclick="toggleLectura('cuerpo-${b.id}', 'icono-${b.id}')" class="w-full ${b.fondo} p-4 text-left font-bold ${b.color} flex justify-between items-center transition">
+                        <span id="nombre-${b.id}">${b.etiqueta}</span>
+                        <span id="icono-${b.id}" class="text-xl">▼</span>
+                    </button>
+                    <div id="cuerpo-${b.id}" class="hidden p-4 bg-white border-t text-sm text-gray-700 leading-relaxed">
+                        <p id="texto-${b.id}" class="whitespace-pre-line">Cargando texto...</p>
+                    </div>
+                </div>`).join('');
         }
 
-        window.cargarLecturasDelDia = async function() {
-            let hoy = new Date().toISOString().split('T')[0];
-            document.getElementById('fecha-lectura-buscar').value = hoy;
-            document.getElementById('titulo-dia-lectura').innerText = "Lecturas del día (" + hoy + ")";
-            document.getElementById('texto-lectura-1').innerText = "Texto de la primera lectura litúrgica cargado correctamente.";
-            document.getElementById('texto-salmo').innerText = "R/. El Señor es mi pastor, nada me falta...";
-            document.getElementById('texto-lectura-2').innerText = "Texto de la segunda lectura litúrgica.";
-            document.getElementById('texto-evangelio').innerText = "Texto del santo Evangelio del día.";
+        function limpiarTextoLectura(texto) {
+            const sinTags = (texto || "").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "");
+            const conv = document.createElement('textarea');
+            conv.innerHTML = sinTags; // convierte &quot; &nbsp; etc. en texto normal
+            return conv.value.trim();
         }
 
-        window.cargarLecturasPorFecha = async function() {
-            let fecha = document.getElementById('fecha-lectura-buscar').value;
+        // Fuente principal: feed de Evangelizo (la misma fuente que usa la otra API)
+        async function pedirLecturasEvangelizo(fecha) {
+            const f = fecha.replace(/-/g, '');
+            const pedir = async (tipo, contenido) => {
+                const res = await fetch(`https://feed.evangelizo.org/v2/reader.php?date=${f}&type=${tipo}&lang=SP&content=${contenido}`);
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                return (await res.text()).trim();
+            };
+            const partes = [['first_reading', 'FR'], ['psalm', 'PS'], ['second_reading', 'SR'], ['gospel', 'GSP']];
+            const resultados = await Promise.all(partes.map(async ([clave, c]) => {
+                const [text, ref] = await Promise.all([pedir('reading', c), pedir('reading_lt', c)]);
+                return [clave, { text, reference_displayed: limpiarTextoLectura(ref) }];
+            }));
+            const data = Object.fromEntries(resultados);
+            if (!data.first_reading.text && !data.gospel.text) throw new Error("Respuesta vacía");
+            return data;
+        }
+
+        // Respaldo: la API anterior
+        async function pedirLecturasRespaldo(fecha) {
+            const res = await fetch(`https://evangelium.manuelsanchez.dev/api/es/days/${fecha}`);
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            return await res.json();
+        }
+
+        async function pedirLecturas(fecha) {
+            if (lecturasCache[fecha]) return lecturasCache[fecha];
+            let data;
+            try {
+                data = await pedirLecturasEvangelizo(fecha);
+            } catch (e1) {
+                console.warn("Evangelizo falló:", e1);
+                try {
+                    data = await pedirLecturasRespaldo(fecha);
+                } catch (e2) {
+                    throw new Error(`Evangelizo: ${e1.message} | Respaldo: ${e2.message}`);
+                }
+            }
+            lecturasCache[fecha] = data;
+            return data;
+        }
+
+        async function mostrarLecturas(fecha) {
             document.getElementById('titulo-dia-lectura').innerText = "Lecturas del día: " + fecha;
-            document.getElementById('texto-lectura-1').innerText = "Texto de la primera lectura para " + fecha + ".";
-            document.getElementById('texto-salmo').innerText = "Salmo responsorial para " + fecha + ".";
-            document.getElementById('texto-lectura-2').innerText = "Segunda lectura para " + fecha + ".";
-            document.getElementById('texto-evangelio').innerText = "Santo Evangelio para " + fecha + ".";
+            BLOQUES_LECTURA.forEach(b => {
+                document.getElementById('contenedor-' + b.id).classList.remove('hidden');
+                document.getElementById('texto-' + b.id).textContent = "Cargando...";
+            });
+            try {
+                const d = await pedirLecturas(fecha);
+                BLOQUES_LECTURA.forEach(b => {
+                    const bloque = d[b.clave];
+                    const contenedor = document.getElementById('contenedor-' + b.id);
+                    if (!bloque || !bloque.text) {
+                        // La segunda lectura solo existe en domingos y solemnidades
+                        contenedor.classList.add('hidden');
+                        return;
+                    }
+                    const ref = bloque.reference_displayed ? ` — ${bloque.reference_displayed}` : "";
+                    document.getElementById('nombre-' + b.id).textContent = b.etiqueta + ref;
+                    document.getElementById('texto-' + b.id).textContent = limpiarTextoLectura(bloque.text);
+                });
+            } catch (e) {
+                console.error("Error cargando lecturas:", e);
+                BLOQUES_LECTURA.forEach(b => {
+                    document.getElementById('texto-' + b.id).textContent =
+                        "No se pudieron cargar las lecturas en este momento. Intenta de nuevo más tarde o consúltalas en evangelizo.org. (Detalle técnico: " + e.message + ")";
+                });
+            }
         }
 
+        window.cargarLecturasDelDia = function() {
+            const hoy = fechaLocalISO();
+            document.getElementById('fecha-lectura-buscar').value = hoy;
+            mostrarLecturas(hoy);
+        };
+        window.cargarLecturasPorFecha = function() {
+            const fecha = document.getElementById('fecha-lectura-buscar').value;
+            if (fecha) mostrarLecturas(fecha);
+        };
+
+        // ===== RECURSOS LITÚRGICOS =====
+        const RECURSOS = [
+            ["🏺 1. Las Vinajeras y el Aguamanil", [
+                ["Qué son", "Son los pequeños recipientes (ampolletas) para el vino y el agua, acompañados de la jarra y el cuenco (aguamanil) para el lavatorio de manos."],
+                ["Para qué sirven", "Las vinajeras contienen los elementos que se convertirán en el Cuerpo y la Sangre de Cristo. El aguamanil sirve para que el sacerdote se purifique las manos antes de la Plegaria Eucarística."],
+                ["Cómo llevarlos", "Se transportan con cuidado y respeto (idealmente tomándolos por la base o el asa) hacia el altar en el momento del ofertorio. El monaguillo del aguamanil lleva la jarra en una mano y la toalla doblada en el otro brazo de forma pulcra."]
+            ]],
+            ["📖 2. El Misal Romano", [
+                ["Qué es", "Es el libro litúrgico oficial que contiene todas las oraciones, la gran Plegaria Eucarística y las directrices para celebrar la Santa Misa."],
+                ["Para qué sirve", "Guía paso a paso al sacerdote en la celebración eucarística de cada día del año litúrgico."],
+                ["Cómo llevarlo/sostenerlo", "Se transporta abrazándolo con ambas manos a la altura del pecho con reverencia. Al sostenerlo para que el sacerdote lea, se debe abrir firmemente a la altura correcta, procurando no tapar el texto y manteniendo una postura recta y atenta."]
+            ]],
+            ["💨 3. El Incensario y la Naveta", [
+                ["Qué son", "El incensario (o turíbulo) es el recipiente metálico donde se quema el incienso sobre carbones encendidos. La naveta es el pequeño recipiente con forma de barquito que contiene el incienso en grano junto con su cucharita."],
+                ["Para qué sirven", "El incienso simboliza la oración de los fieles que asciende hacia Dios y sirve para honrar y venerar el altar, las ofrendas, al sacerdote y a la asamblea."],
+                ["Cómo llevarlos", "El monaguillo que lleva la naveta camina al lado del turiferario. Se sostiene la naveta con ambas manos a la altura del pecho. Al momento de entregar el incienso al sacerdote, se le acerca la naveta para que pueda tomar las cucharadas y bendecirlo."]
+            ]],
+            ["🧥 4. El Alba y la Sotana (con Sobrepelliz o Roquete)", [
+                ["Qué son", "El alba es la túnica blanca larga que usan los ministros y acólitos. La sotana es la túnica oscura (comúnmente negra o roja) que a menudo se complementa encima con el sobrepelliz o roquete (una túnica blanca más corta con mangas anchas)."],
+                ["Para qué sirven", "Representan la pureza del alma que se requiere para servir en el altar y ayudan a mantener la uniformidad y el respeto durante la celebración litúrgica."],
+                ["Cómo usarlos/llevarlos", "Deben lucir siempre limpios, bien planchados y a la medida exacta (el alba no debe arrastrar en el suelo para evitar tropezar al caminar por el presbiterio)."]
+            ]],
+            ["🪵 5. La Credencia (La mesita del altar)", [
+                ["Qué es", "Es la mesa auxiliar que se coloca a un lado del presbiterio, cerca del altar."],
+                ["Para qué sirve", "En ella se preparan y se colocan ordenadamente todos los objetos litúrgicos antes de ser utilizados en la Misa (las vinajeras con agua y vino, el purificador, el cáliz, la patena, el aguamanil y la toalla)."],
+                ["Cómo utilizarla", "Debe mantenerse ordenada antes, durante y después de la celebración. Los monaguillos son los encargados de llevar lo necesario desde la credencia hacia el altar en el momento litúrgico correspondiente (como en el ofertorio)."]
+            ]],
+            ["🏆 6. El Cáliz y la Patena", [
+                ["Qué son", "El cáliz es la copa donde se consagra el vino y la patena es el platito que sostiene el pan (la hostia)."],
+                ["Para qué sirven", "Contienen el Cuerpo y la Sangre de Cristo durante la Misa."],
+                ["Cómo tratarlos", "Se manejan siempre con mucha reverencia. El monaguillo los coloca en la credencia, limpios y ordenados, cuando el sacerdote se lo indica."]
+            ]],
+            ["🧻 7. El Corporal, el Purificador y la Palia", [
+                ["Qué son", "El corporal es un lienzo blanco cuadrado que se extiende sobre el altar. El purificador es un paño pequeño para limpiar el cáliz. La palia es un cuadrito rígido que cubre el cáliz."],
+                ["Para qué sirven", "Mantienen limpios y protegidos el pan y el vino consagrados, cuidando que no caiga ni una partícula."],
+                ["Cómo cuidarlos", "Deben estar siempre limpios, planchados y bien doblados, y se lavan aparte de la ropa común, con respeto."]
+            ]],
+            ["🕯️ 8. Los Ciriales y el Cirio Pascual", [
+                ["Qué son", "Los ciriales son velas altas en un candelero que acompañan a la cruz y al Evangelio. El cirio pascual es una gran vela que se bendice en la Vigilia Pascual."],
+                ["Para qué sirven", "La luz simboliza a Cristo resucitado, luz del mundo. El cirio pascual se enciende en el tiempo de Pascua, en los bautizos y en los funerales."],
+                ["Cómo llevarlos", "Los ciriales se llevan con ambas manos, rectos y a la altura del pecho, caminando sin prisa para que la cera no se derrame."]
+            ]],
+            ["✝️ 9. La Cruz Procesional", [
+                ["Qué es", "Es una cruz alta, con asta, que abre la procesión de entrada."],
+                ["Para qué sirve", "Recuerda que Cristo es quien guía a su Iglesia."],
+                ["Cómo llevarla", "El crucífero la lleva con ambas manos, con la imagen del Crucificado hacia adelante. Según las normas del Misal, no hace genuflexión: solo inclina la cabeza hacia el altar. Al llegar al presbiterio, la coloca en su lugar."]
+            ]],
+            ["📕 10. El Leccionario y el Evangeliario", [
+                ["Qué son", "El Leccionario es el libro con las lecturas de la Misa. El Evangeliario es un libro adornado que contiene solo los evangelios."],
+                ["Para qué sirven", "Se usan para proclamar la Palabra de Dios desde el ambón."],
+                ["Cómo se llevan", "El Evangeliario lo lleva el lector o el diácono en la procesión de entrada, elevado un poco ante el pecho. El monaguillo debe saber dónde está cada libro para tenerlos listos."]
+            ]],
+            ["🔔 11. La Campanilla", [
+                ["Qué es", "Es una pequeña campana de mano que se toca desde el altar."],
+                ["Para qué sirve", "Avisa a los fieles los momentos importantes, sobre todo en la consagración, cuando el sacerdote eleva el pan y el vino."],
+                ["Cómo usarla", "Se toca con suavidad y a tiempo, siguiendo las indicaciones del sacerdote y la costumbre de la parroquia, sin juegos."]
+            ]],
+            ["🍷 12. El Copón y la Custodia (Ostensorio)", [
+                ["Qué son", "El copón es una copa con tapa donde se guardan las hostias consagradas. La custodia (u ostensorio) es un objeto con forma de sol donde se expone la hostia consagrada."],
+                ["Para qué sirven", "Conservar y adorar a Jesús presente en la Eucaristía."],
+                ["Cómo tratarlos", "Solo los tocan el sacerdote, el diácono o ministros autorizados. En la adoración, el monaguillo acompaña con velas o incienso, con mucha reverencia."]
+            ]],
+            ["🏮 13. El Sagrario y la Lámpara del Santísimo", [
+                ["Qué son", "El sagrario es el lugar seguro y adornado donde se guarda la Eucaristía. Junto a él hay una lámpara encendida."],
+                ["Para qué sirven", "La lámpara indica que Jesús está presente en el sagrario e invita a la reverencia."],
+                ["Cómo comportarse", "Se hace genuflexión (rodilla derecha al suelo) al pasar frente al sagrario, antes y después de la Misa, y se guarda silencio."]
+            ]],
+            ["🎨 14. Los Colores Litúrgicos y las Vestiduras", [
+                ["Qué son", "El sacerdote usa la casulla (prenda exterior) y la estola (banda al cuello) sobre el alba. El color cambia según el tiempo litúrgico."],
+                ["Los colores", "Verde: Tiempo Ordinario. Morado: Adviento y Cuaresma. Blanco: Navidad, Pascua y fiestas del Señor, de la Virgen y de santos no mártires. Rojo: Domingo de Ramos, Viernes Santo, Pentecostés y mártires. Rosa: domingos Gaudete (Adviento) y Laetare (Cuaresma), de forma opcional."],
+                ["Cómo ayudar", "Si el sacerdote te lo pide, ayuda a tener listas las vestiduras del color del día."]
+            ]],
+            ["💦 15. El Hisopo (Aspersorio) y el Agua Bendita", [
+                ["Qué son", "El acetre es el recipiente con agua bendita y el hisopo es lo que se usa para rociarla."],
+                ["Para qué sirven", "Recuerdan nuestro bautismo. Se usan en el rito de aspersión de algunos domingos, en bendiciones y en funerales."],
+                ["Cómo llevarlos", "El monaguillo sostiene el acetre a la altura del pecho, cerca del sacerdote, sin moverlo bruscamente."]
+            ]],
+            ["🚶 16. Orden de la Procesión de Entrada", [
+                ["Quién va primero", "Si hay incienso, abre el turiferario con el incensario. Luego el crucífero con la cruz, entre dos acólitos con ciriales. Después el lector (con el Evangeliario si se usa) y al final el sacerdote."],
+                ["Cómo caminar", "Con paso tranquilo, manos juntas o sosteniendo el objeto, mirando al frente y sin hablar."],
+                ["Al llegar al altar", "Se hace la reverencia que corresponda y cada quien va a su lugar."]
+            ]],
+            ["🧎 17. Gestos y Posturas del Monaguillo", [
+                ["Genuflexión", "Se hace con la rodilla derecha al suelo ante el sagrario donde está el Santísimo."],
+                ["Inclinaciones", "Inclinación profunda ante el altar (si no hay sagrario) y de cabeza al nombrar a Jesús, a la Virgen o al santo del día."],
+                ["Manos y actitud", "Manos juntas frente al pecho cuando no llevas nada. Mantente atento, sin hablar ni jugar: el altar es un lugar sagrado."]
+            ]],
+            ["⛪ 18. Las Partes de la Santa Misa", [
+                ["Ritos iniciales", "Procesión de entrada, saludo, acto penitencial, Gloria (los domingos) y oración colecta."],
+                ["Liturgia de la Palabra", "Primera lectura, salmo, segunda lectura (domingos), Evangelio, homilía, Credo (domingos) y oración de los fieles."],
+                ["Liturgia Eucarística", "Presentación de las ofrendas, Plegaria Eucarística (con la consagración), Padre Nuestro, rito de la paz y comunión."],
+                ["Rito de conclusión", "Bendición, despedida y procesión de salida."]
+            ]]
+        ];
+
+        function pintarRecursos() {
+            document.getElementById('lista-recursos').innerHTML = RECURSOS.map(([titulo, partes], i) => `
+                <div class="border rounded-xl overflow-hidden shadow-sm bg-slate-50">
+                    <button onclick="toggleLectura('recurso-${i}', 'icon-rec-${i}')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                        <span>${titulo}</span><span id="icon-rec-${i}" class="text-xl">▼</span>
+                    </button>
+                    <div id="recurso-${i}" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                        ${partes.map(([k, v]) => `<p><strong>${k}:</strong> ${v}</p>`).join('')}
+                    </div>
+                </div>`).join('');
+        }
+
+        // ===== SANTOS =====
+        // [emoji, nombre, fecha, palabras clave para buscar, historia]
+        const SANTOS = [
+            ["🧒", "San Tarcisio (Patrono de los Monaguillos)", "15 de agosto", "monaguillos nino martir eucaristia", "Joven acólito del siglo III en Roma. Llevaba la Sagrada Eucaristía a los cristianos encarcelados y prefirió morir apedreado antes que profanar el sacramento."],
+            ["📜", "San Agustín de Hipona (Doctor de la Iglesia)", "28 de agosto", "doctor iglesia confesor", "Obispo de Hipona, autor de las Confesiones, convertido tras las oraciones de su madre Santa Mónica."],
+            ["👑", "Santa Catalina de Siena (Doctora de la Iglesia)", "29 de abril", "doctora iglesia patrona europa", "Mística dominica que aconsejó a papas y gobernantes, patrona de Europa."],
+            ["🌿", "San Francisco de Asís", "4 de octubre", "pobreza animales paz", "Renunció a sus riquezas para vivir en pobreza evangélica, fundó los franciscanos y amaba profundamente la naturaleza."],
+            ["🌸", "Santa Teresita del Niño Jesús (Doctora)", "1 de octubre", "florecita caminito", "Monja carmelita del \"caminito\" espiritual, haciendo las pequeñas cosas con gran amor."],
+            ["🧑‍🏫", "San Juan Bosco (Don Bosco)", "31 de enero", "don bosco jovenes salesianos", "Padre y maestro de la juventud, fundador de los salesianos en Turín."],
+            ["📚", "Santo Tomás de Aquino (Doctor Angélico)", "28 de enero", "doctor angelico teologia", "Brillante filósofo y teólogo medieval, autor de la Suma Teológica."],
+            ["🔨", "San José (Esposo de la Virgen María)", "19 de marzo", "esposo virgen maria patrono iglesia carpintero", "Custodio de la Sagrada Familia y patrono de la Iglesia universal."],
+            ["🌹", "Santa Rosa de Lima (Patrona de América)", "23 de agosto", "primera santa america peru", "Primera santa de América, entregada a la oración y servicio a los pobres en Lima."],
+            ["🧹", "San Martín de Porres", "3 de noviembre", "escoba peru humildad", "Fray dominico peruano famoso por su humildad, milagros y caridad."],
+            ["🇻🇦", "San Juan Pablo II", "22 de octubre", "papa jovenes", "Papa polaco promotor de las Jornadas Mundiales de la Juventud."],
+            ["💙", "Santa Teresa de Calcuta", "5 de septiembre", "madre teresa caridad misioneras", "Fundadora de las Misioneras de la Caridad, sirviendo a los más pobres."],
+            ["🍞", "San Antonio de Padua", "13 de junio", "cosas perdidas", "Gran predicador franciscano, invocado para encontrar objetos perdidos."],
+            ["✨", "San Judas Tadeo (Casos Difíciles)", "28 de octubre", "abogado casos dificiles", "Apóstol de Jesús y patrono de las causas difíciles y desesperadas."],
+            ["⚡", "San Expedito (Causas Urgentes)", "19 de abril", "causas urgentes", "Mártir romano conocido por su rápida respuesta en situaciones urgentes."],
+            ["🎁", "San Nicolás de Mira", "6 de diciembre", "papa noel santa claus", "Obispo generoso cuyas acciones inspiraron la tradición de Papá Noel."],
+            ["❤️", "San Valentín", "14 de febrero", "enamorados matrimonio", "Sacerdote que defendió el matrimonio cristiano y fue martirizado."],
+            ["⚔️", "San Pablo (Apóstol de las Gentes)", "29 de junio", "apostol gentes", "Perseguidor convertido en el gran misionero del Evangelio por el Mediterráneo."],
+            ["🔑", "San Pedro (Príncipe de los Apóstoles)", "29 de junio", "primer papa apostol", "Pescador elegido por Jesús como roca de su Iglesia."],
+            ["🦅", "San Juan Evangelista", "27 de diciembre", "discipulo amado", "El discípulo amado, autor del cuarto Evangelio y del Apocalipsis."],
+            ["👁️", "Santa Lucía", "13 de diciembre", "patrona vista ojos", "Mártir siciliana, protectora de la vista y los ojos."],
+            ["🍀", "San Patricio de Irlanda", "17 de marzo", "irlanda trebol", "Obispo que evangelizó Irlanda utilizando el trébol."],
+            ["🔥", "Santa Águeda", "5 de febrero", "martir sicilia", "Joven noble que resistió crueles torturas por su fe."],
+            ["🌊", "San Juan Bautista", "24 de junio", "precursor jordan", "Precursor que bautizó a Jesús en el río Jordán."],
+            ["💧", "Santa Bernardita Soubirous", "16 de abril", "bernadette lourdes apariciones", "Pastora a quien se apareció la Virgen en Lourdes."],
+            ["📖", "San Benito de Nursia", "11 de julio", "ora et labora", "Patriarca de los monjes de Occidente, creador de \"Ora et labora\"."],
+            ["🛡️", "San Ignacio de Loyola", "31 de julio", "jesuitas", "Fundador de los jesuitas y autor de los Ejercicios Espirituales."],
+            ["⚔️", "Santa Juana de Arco", "30 de mayo", "francia", "Heroína y mártir francesa que defendió su patria con valor."],
+            ["🔥", "San Lorenzo Diácono", "10 de agosto", "martir parrilla", "Diácono romano que consideraba a los pobres como el tesoro de la Iglesia."],
+            ["🕊️", "San Esteban Protomártir", "26 de diciembre", "protomartir", "Primer mártir del cristianismo que perdonó a sus verdugos."],
+            ["🌏", "San Francisco Javier", "3 de diciembre", "asia misionero", "Gigante de la evangelización en la India y Japón."],
+            ["👩‍👧", "Santa Mónica", "27 de agosto", "madre de agustin", "Madre persistente en la oración por la conversión de San Agustín."],
+            ["🍞", "San Vicente de Paúl", "27 de septiembre", "caridad pobres", "Apóstol de la caridad y protector de los necesitados."],
+            ["📜", "San Juan de la Cruz", "14 de diciembre", "mistico poeta", "Poeta místico y Doctor de la Iglesia carmelita."],
+            ["⛪", "Santa Teresa de Ávila", "15 de octubre", "teresa de jesus doctora", "Reformadora del Carmelo y primera mujer Doctora de la Iglesia."],
+            ["🩸", "San Pío de Pietrelcina (Padre Pío)", "23 de septiembre", "padre pio estigmas", "Sacerdote estigmatizado y célebre confesor capuchino."],
+            ["⛓️", "San Maximiliano Kolbe", "14 de agosto", "auschwitz martir", "Dio su vida por un padre de familia en el campo de Auschwitz."],
+            ["✨", "Santa Faustina Kowalska", "5 de octubre", "misericordia", "Apóstol de la Divina Misericordia en Polonia."],
+            ["🇵🇪", "San Juan Macías", "18 de septiembre", "peru dominico", "Fray dominico portero en Lima, entregado a los pobres."],
+            ["🐕", "San Roque", "16 de agosto", "peregrino peste", "Peregrino protector contra las pestes y enfermedades."],
+            ["💼", "San Josemaría Escrivá", "26 de junio", "opus dei trabajo", "Fundador del Opus Dei, predicador de la santidad en el trabajo ordinario."],
+            ["🎵", "Santa Cecilia", "22 de noviembre", "patrona musica", "Virgen y mártir romana, patrona universal de los músicos."],
+            ["🧥", "San Martín de Tours", "11 de noviembre", "capa", "Soldado que compartió su capa con un mendigo."],
+            ["🚗", "San Cristóbal", "25 de julio", "protector viajeros", "Gigante que cruzaba viajeros y llevó al Niño Jesús."],
+            ["😄", "San Felipe Neri", "26 de mayo", "alegria roma", "Santo de la alegría y del buen humor en Roma."],
+            ["🐑", "Santa Inés de Roma", "21 de enero", "virgen martir cordero", "Joven mártir de gran pureza, simbolizada con un cordero."],
+            ["⛪", "San Juan María Vianney (Cura de Ars)", "4 de agosto", "cura ars confesionario sacerdotes", "Patrono de los sacerdotes, célebre por sus horas en el confesionario."],
+            ["⭐", "Santa Filomena", "11 de agosto", "virgen martir", "Joven virgen y mártir descubierta en las catacumbas."],
+            ["🏝️", "San Damián de Molokai", "10 de mayo", "leprosos hawai", "Apóstol de los leprosos en la isla hawaiana de Molokai."],
+            ["💻", "Beato Carlo Acutis (Ciberapóstol)", "12 de octubre", "ciberapostol eucaristia beato internet", "Joven informático enamorado de la Eucaristía, autopista hacia el cielo."],
+            ["🇸🇻", "San Óscar Arnulfo Romero", "24 de marzo", "el salvador arzobispo martir pobres monseñor romero", "Arzobispo de San Salvador que defendió a los pobres y denunció la violencia. Fue asesinado mientras celebraba misa en 1980 y canonizado en 2018."],
+            ["🇸🇻", "Beato Rutilio Grande", "12 de marzo", "el salvador jesuita martir campesinos", "Sacerdote jesuita salvadoreño cercano a los campesinos, asesinado en 1977 junto a dos laicos. Fue beatificado en 2022."],
+            ["🦁", "San Marcos Evangelista", "25 de abril", "evangelio leon", "Autor del evangelio más breve; acompañó a Pedro y a Pablo. Su símbolo es el león."],
+            ["🐂", "San Lucas Evangelista", "18 de octubre", "medico evangelio hechos toro", "Médico, compañero de San Pablo y autor del Evangelio y de los Hechos de los Apóstoles. Su símbolo es el toro."],
+            ["💰", "San Mateo Apóstol y Evangelista", "21 de septiembre", "cobrador impuestos evangelio", "Cobrador de impuestos a quien Jesús llamó a seguirlo y autor del Evangelio según San Mateo."],
+            ["🐚", "Santiago Apóstol", "25 de julio", "apostol espana pescador compostela", "Hermano de Juan y pescador, uno de los tres apóstoles más cercanos a Jesús. Fue el primer apóstol mártir y es patrono de España."],
+            ["🐟", "San Andrés Apóstol", "30 de noviembre", "apostol pescador hermano pedro", "Pescador, hermano de Pedro y primer apóstol llamado por Jesús. La tradición dice que murió en una cruz en forma de X."],
+            ["🤲", "Santo Tomás Apóstol", "3 de julio", "apostol duda resurreccion", "El apóstol que dudó de la resurrección hasta ver a Jesús y exclamó: «¡Señor mío y Dios mío!»."],
+            ["😇", "San Miguel, San Gabriel y San Rafael (Arcángeles)", "29 de septiembre", "arcangeles angeles", "Los tres arcángeles nombrados en la Biblia: Miguel defiende contra el mal, Gabriel anuncia a María y Rafael acompaña a Tobías."],
+            ["📜", "San Jerónimo", "30 de septiembre", "biblia vulgata traductor doctor", "Tradujo la Biblia al latín (la Vulgata) y vivió como estudioso y ermitaño en Belén."],
+            ["🏛️", "San Ambrosio", "7 de diciembre", "obispo milan doctor", "Obispo de Milán y Doctor de la Iglesia, maestro y guía de San Agustín."],
+            ["🎼", "San Gregorio Magno", "3 de septiembre", "papa doctor canto gregoriano", "Papa y Doctor de la Iglesia que impulsó la misión y reformó la liturgia; el canto gregoriano lleva su nombre."],
+            ["🗣️", "San Juan Crisóstomo", "13 de septiembre", "boca de oro obispo constantinopla predicador", "Obispo de Constantinopla llamado «Boca de Oro» por su forma de predicar."],
+            ["📚", "San Buenaventura", "15 de julio", "franciscano doctor seráfico", "Franciscano, teólogo y Doctor de la Iglesia, conocido como el Doctor Seráfico."],
+            ["🔬", "San Alberto Magno", "15 de noviembre", "dominico cientificos maestro tomas aquino", "Dominico, sabio y maestro de Santo Tomás de Aquino, patrono de los científicos."],
+            ["📿", "Santo Domingo de Guzmán", "8 de agosto", "dominicos predicadores rosario", "Fundador de la Orden de Predicadores (dominicos), dedicado a predicar el Evangelio. La tradición lo une a la devoción del Rosario."],
+            ["🌙", "Santa Clara de Asís", "11 de agosto", "clarisas pobreza francisco", "Seguidora de San Francisco, fundó las Clarisas y vivió en pobreza y oración."],
+            ["🏜️", "San Antonio Abad", "17 de enero", "padre monjes desierto egipto", "Considerado el padre de los monjes, vivió muchos años en el desierto de Egipto en oración."],
+            ["🐝", "San Bernardo de Claraval", "20 de agosto", "monje cisterciense doctor virgen maria", "Monje cisterciense y Doctor de la Iglesia, gran predicador y devoto de la Virgen María."],
+            ["🌹", "Santa Rita de Casia", "22 de mayo", "casos imposibles agustina", "Esposa, madre y luego monja agustina, invocada como patrona de los casos imposibles."],
+            ["❤️‍🔥", "Santa Margarita María de Alacoque", "16 de octubre", "sagrado corazon jesus devocion", "Religiosa francesa que difundió la devoción al Sagrado Corazón de Jesús."],
+            ["🧑‍🎓", "San Carlos Borromeo", "4 de noviembre", "milan catequesis ninos sacerdotes", "Arzobispo de Milán que reformó la formación de los sacerdotes y promovió la catequesis para niños."],
+            ["✍️", "San Francisco de Sales", "24 de enero", "doctor escritores periodistas dulzura", "Obispo y Doctor de la Iglesia, patrono de escritores y periodistas, famoso por su dulzura al enseñar la fe."],
+            ["🏥", "San Camilo de Lelis", "14 de julio", "enfermos hospitales", "Fundó una orden para cuidar a los enfermos; es patrono de los enfermos y los hospitales."],
+            ["🩺", "San Juan de Dios", "8 de marzo", "enfermos hospitales enfermeros", "Se dedicó a cuidar a enfermos y pobres; es patrono de los hospitales y de los enfermeros."],
+            ["👩‍⚕️", "Santa Gianna Beretta Molla", "28 de abril", "medica madre familia vida", "Médica y madre italiana que dio su vida por proteger a su hija antes de nacer."],
+            ["⛓️", "San Pedro Claver", "9 de septiembre", "esclavos cartagena jesuita", "Jesuita español que sirvió a los esclavos africanos en Cartagena de Indias; se llamaba «esclavo de los esclavos»."],
+            ["🌹", "San Juan Diego", "9 de diciembre", "guadalupe mexico virgen indigena", "Indígena a quien se apareció la Virgen de Guadalupe en México en 1531."],
+            ["🌲", "San Charbel", "24 de julio", "libano monje ermitano maronita", "Monje y ermitaño libanés, conocido por su vida de silencio, oración y milagros."],
+            ["🎓", "San Luis Gonzaga", "21 de junio", "jovenes jesuita estudiantes peste", "Joven jesuita italiano que murió cuidando a enfermos de la peste; es patrono de los jóvenes."],
+            ["🏫", "Santo Domingo Savio", "9 de mayo", "alumno don bosco joven ninos", "Alumno de Don Bosco que murió a los 14 años; es modelo de santidad juvenil."],
+            ["🕊️", "Santa María Goretti", "6 de julio", "nina martir perdon", "Niña italiana que murió a los 11 años defendiendo su fe y su pureza, y perdonó a quien la atacó."],
+            ["⛈️", "Santa Bárbara", "4 de diciembre", "tormentas martir", "Según la tradición, joven mártir de los primeros siglos, invocada contra las tormentas."],
+            ["🏹", "San Sebastián", "20 de enero", "soldado martir atletas", "Soldado romano mártir que animaba a los cristianos perseguidos; es patrono de los atletas."],
+            ["🐉", "San Jorge", "23 de abril", "soldado martir dragon inglaterra", "Soldado y mártir de los primeros siglos, patrono de Inglaterra y famoso por la leyenda del dragón."],
+            ["🌾", "San Isidro Labrador", "15 de mayo", "campesino agricultores madrid", "Campesino español, patrono de los agricultores, que unía el trabajo del campo con la oración."],
+            ["🕯️", "San Blas", "3 de febrero", "garganta obispo martir velas", "Obispo y mártir, invocado para proteger la garganta; en su fiesta se bendicen las gargantas con dos velas."],
+            ["✝️", "Santa Elena", "18 de agosto", "madre constantino santa cruz", "Madre del emperador Constantino, a quien la tradición atribuye el hallazgo de la Santa Cruz."],
+            ["🍞", "San Pío X", "21 de agosto", "papa comunion ninos eucaristia", "Papa que impulsó la comunión frecuente y permitió que los niños comulgaran desde pequeños."],
+            ["😊", "San Juan XXIII", "11 de octubre", "papa bueno concilio vaticano", "Papa conocido como el «Papa bueno», que convocó el Concilio Vaticano II."],
+            ["👵", "San Joaquín y Santa Ana", "26 de julio", "abuelos jesus padres virgen maria", "Los padres de la Virgen María y abuelos de Jesús, según la tradición."],
+            ["🌍", "Santa Josefina Bakhita", "8 de febrero", "sudan esclava religiosa", "Nacida en Sudán, fue esclava de niña, encontró la fe y se hizo monja en Italia; es patrona de Sudán."],
+            ["🔥", "San Carlos Lwanga y compañeros", "3 de junio", "uganda martires jovenes pajes", "Jóvenes pajes del rey de Uganda que murieron quemados por mantenerse fieles a su fe cristiana en 1886."],
+            ["🎶", "Santa Hildegarda de Bingen", "17 de septiembre", "abadesa mistica compositora doctora", "Abadesa alemana, mística, compositora y Doctora de la Iglesia."],
+            ["✉️", "San Ignacio de Antioquía", "17 de octubre", "obispo martir cartas", "Obispo y mártir del siglo II que escribió cartas a las primeras comunidades cristianas."],
+            ["👩‍👧", "Santa Perpetua y Santa Felicidad", "7 de marzo", "cartago martires madre esclava", "Mártires de Cartago en el año 203: una madre joven y su esclava."],
+            ["👶", "Santos Inocentes", "28 de diciembre", "ninos belen herodes martires", "Niños de Belén asesinados por orden del rey Herodes, que buscaba matar a Jesús."],
+            ["🧠", "San Justino", "1 de junio", "filosofo martir apologista", "Filósofo convertido que defendió la fe cristiana y murió mártir en Roma."],
+            ["🤝", "San Basilio Magno", "2 de enero", "obispo doctor caridad monjes", "Obispo y Doctor de la Iglesia que organizó obras de caridad y escribió reglas para monjes."],
+            ["🛡️", "San Atanasio", "2 de mayo", "obispo alejandria doctor arrianismo", "Obispo de Alejandría que defendió la divinidad de Jesús frente a la herejía arriana."]
+        ];
+
+        function pintarSantos() {
+            document.getElementById('lista-santos').innerHTML = SANTOS.map(([emoji, nombre, fecha, claves, historia], i) => {
+                const n = i + 1;
+                return `
+                <div class="item-santo border rounded-xl overflow-hidden shadow-sm bg-slate-50" data-nombre="${escapeHtml(normalizar(nombre + ' ' + claves))}">
+                    <button onclick="toggleLectura('santo-${n}', 'icon-santo-${n}')" class="w-full bg-white hover:bg-gray-50 p-4 text-left font-bold text-indigo-700 flex justify-between items-center transition">
+                        <span>${emoji} ${n}. ${escapeHtml(nombre)} — ${escapeHtml(fecha)}</span>
+                        <span id="icon-santo-${n}" class="text-xl">▼</span>
+                    </button>
+                    <div id="santo-${n}" class="hidden p-5 bg-white border-t text-sm text-gray-700 space-y-3 leading-relaxed">
+                        <p><strong>Historia:</strong> ${escapeHtml(historia)}</p>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.filtrarSantos = function() {
+            let filtro = normalizar(document.getElementById('buscador-santos').value.trim());
+            document.querySelectorAll('.item-santo').forEach(item => {
+                let texto = (item.getAttribute('data-nombre') || "") + " " + normalizar(item.textContent);
+                item.style.display = texto.includes(filtro) ? "" : "none";
+            });
+        };
+
+        // ===== CHAT =====
         window.enviarMensajeCloud = async function() {
-            let mensaje = document.getElementById('chat-mensaje').value;
-            if(!mensaje) return alert("Escribe un mensaje.");
+            let mensaje = document.getElementById('chat-mensaje').value.trim();
+            if (!mensaje) return alert("Escribe un mensaje.");
             try {
                 await window.firebaseModules.addDoc(window.firebaseModules.collection(window.db, "chat"), {
                     nombre: usuarioActual || "Anónimo",
@@ -1258,12 +900,17 @@
                     timestamp: Date.now()
                 });
                 document.getElementById('chat-mensaje').value = "";
-            } catch(e) { console.error(e); }
-        }
+            } catch (e) { console.error(e); }
+        };
 
-        window.cargarChatCloud = async function() {
+        let desuscribirChat = null;
+        window.cargarChatCloud = function() {
+            if (!window.db || !window.firebaseModules) return;
+            const { collection, query, orderBy, onSnapshot } = window.firebaseModules;
             let contenedor = document.getElementById('contenedor-mensajes');
-            window.firebaseModules.onSnapshot(window.firebaseModules.collection(window.db, "chat"), (snapshot) => {
+            if (desuscribirChat) desuscribirChat();
+            const q = query(collection(window.db, "chat"), orderBy("timestamp", "asc"));
+            desuscribirChat = onSnapshot(q, (snapshot) => {
                 contenedor.innerHTML = "";
                 snapshot.forEach((docSnap) => {
                     let data = docSnap.data();
@@ -1271,19 +918,41 @@
                     div.className = "border rounded-xl p-3 bg-slate-50 flex justify-between items-start";
                     div.innerHTML = `
                         <div>
-                            <span class="font-bold text-indigo-700 text-xs">${data.nombre}:</span>
-                            <p class="text-sm text-gray-800 mt-0.5">${data.mensaje}</p>
+                            <span class="font-bold text-indigo-700 text-xs">${escapeHtml(data.nombre)}:</span>
+                            <p class="text-sm text-gray-800 mt-0.5">${escapeHtml(data.mensaje)}</p>
                         </div>
-                        ${esAdmin ? `<button onclick="eliminarMensajeCloud('${docSnap.id}')" class="text-red-500 text-xs">🗑️</button>` : ''}
-                    `;
+                        ${esAdmin ? `<button onclick="eliminarMensajeCloud('${docSnap.id}')" class="text-red-500 text-xs">🗑️</button>` : ''}`;
                     contenedor.appendChild(div);
                 });
-            });
-        }
+            }, (err) => console.error("Error en chat:", err));
+        };
 
         window.eliminarMensajeCloud = async function(id) {
             await window.firebaseModules.deleteDoc(window.firebaseModules.doc(window.db, "chat", id));
-        }
+        };
+
+        // ===== ARRANQUE =====
+        window.onload = function() {
+            TABS.forEach(t => document.getElementById('btn-' + t).className = CLASE_TAB);
+            cambiarTab('asistencia');
+            pintarCatequistas();
+            pintarRecursos();
+            pintarSantos();
+            pintarEsqueletoLecturas();
+            let guardado = localStorage.getItem('catequesis_usuario');
+            if (guardado) {
+                usuarioActual = guardado;
+                aplicarNombre();
+            }
+            setTimeout(() => {
+                if (!window.db || !window.firebaseModules) {
+                    const aviso = document.createElement('div');
+                    aviso.className = "bg-red-100 text-red-800 text-sm text-center px-4 py-2 border-b border-red-200";
+                    aviso.textContent = "⚠️ No se pudo conectar con la nube (Firebase). Monaguillos, tareas y chat no cargarán. Revisa tu internet y la consola (F12).";
+                    document.body.prepend(aviso);
+                }
+            }, 5000);
+        };
     </script>
 </body>
 </html>
